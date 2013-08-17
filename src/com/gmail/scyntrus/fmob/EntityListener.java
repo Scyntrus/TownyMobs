@@ -188,7 +188,6 @@ public class EntityListener implements Listener {
 			if (Utils.FactionCheck(((CraftPlayer) player).getHandle(), fmob.getFaction()) >= 1) {
 				if (fmob.getFaction().equals(TownyUniverse.getDataSource().getResident(player.getName()).getTown())) {
 					player.sendMessage(String.format("%sYou hit a friendly %s%s", ChatColor.YELLOW, ChatColor.RED, fmob.getTypeName()));
-					entity.setMetadata("NPC", new FixedMetadataValue(plugin, true));
 					return;
 				} else {
 					player.sendMessage(String.format("%sYou cannot hit %s%s%s's %s%s", ChatColor.YELLOW, ChatColor.RED, fmob.getFactionName(), ChatColor.YELLOW, ChatColor.RED, fmob.getTypeName()));
@@ -228,15 +227,6 @@ public class EntityListener implements Listener {
 					}
 				}
 			} catch (Exception ex) {}
-		}
-	}
-	
-
-	@EventHandler(priority=EventPriority.MONITOR)
-	public void onEntityDamageByEntity2(EntityDamageByEntityEvent e) {
-		if (((CraftEntity) e.getEntity()).getHandle() instanceof FactionMob
-				&& e.getEntity().hasMetadata("NPC")) {
-			e.getEntity().removeMetadata("NPC", plugin);
 		}
 	}
 	
