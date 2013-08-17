@@ -50,14 +50,14 @@ public class FmCommand implements CommandExecutor {
 				player.sendMessage("Before giving orders, you must select mobs by right-clicking them");
 			} else if (split[0].equalsIgnoreCase("info")) {
 				if (!player.hasPermission("fmob.spawn")) {
-					player.sendMessage(ChatColor.RED + "You do not have permission to spawn faction mobs.");
+					player.sendMessage(ChatColor.RED + "You do not have permission to spawn towny mobs.");
 				} else {
-					player.sendMessage(ChatColor.GREEN + "You have permission to spawn faction mobs");
+					player.sendMessage(ChatColor.GREEN + "You have permission to spawn towny mobs");
 				}
 				if (!player.hasPermission("fmob.order")) {
 					player.sendMessage(ChatColor.RED + "You do not have permission to order faction mobs.");
 				} else {
-					player.sendMessage(ChatColor.GREEN + "You have permission to order faction mobs");
+					player.sendMessage(ChatColor.GREEN + "You have permission to order towny mobs");
 				}
 				player.sendMessage(ChatColor.BLUE + "Archer:");
 				if (!Archer.enabled) {
@@ -145,11 +145,11 @@ public class FmCommand implements CommandExecutor {
 					fplayer = TownyUniverse.getDataSource().getResident(player.getName());
 					playerfaction = fplayer.getTown();
 				} catch (Exception ex) {
-					player.sendMessage(ChatColor.RED + "You must be in a faction.");
+					player.sendMessage(ChatColor.RED + "You must be in a town.");
 					return true;
 				}
 				if (playerfaction == null) {
-					player.sendMessage(ChatColor.RED + "You must be in a faction.");
+					player.sendMessage(ChatColor.RED + "You must be in a town.");
 					return true;
 				}
 				if (!player.hasPermission("fmob.bypass")) {
@@ -159,12 +159,12 @@ public class FmCommand implements CommandExecutor {
 						return true;
 					}
 					if (FactionMobs.mobList.size() >= FactionMobs.spawnLimit) {
-						player.sendMessage(ChatColor.RED + "There are too many faction mobs");
+						player.sendMessage(ChatColor.RED + "There are too many towny mobs");
 						return true;
 					}
-					if (FactionMobs.mobsPerFaction >= 0) {
+					if (FactionMobs.mobsPerFaction > 0) {
 						if (Utils.countMobsInFaction(playerfaction) >= FactionMobs.mobsPerFaction) {
-							player.sendMessage(ChatColor.RED + "Your faction has too many faction mobs.");
+							player.sendMessage(ChatColor.RED + "Your faction has too many towny mobs.");
 							return true;
 						}
 					}
@@ -256,11 +256,11 @@ public class FmCommand implements CommandExecutor {
 					fplayer = TownyUniverse.getDataSource().getResident(player.getName());
 					playerfaction = fplayer.getTown();
 				} catch (Exception ex) {
-					player.sendMessage(ChatColor.RED + "You must be in a faction.");
+					player.sendMessage(ChatColor.RED + "You must be in a town");
 					return true;
 				}
 				if (playerfaction == null) {
-					player.sendMessage(ChatColor.RED + "You must be in a faction");
+					player.sendMessage(ChatColor.RED + "You must be in a town");
 					return true;
 				}
 				if (split.length == 1) {
@@ -270,7 +270,7 @@ public class FmCommand implements CommandExecutor {
 					try {
 						int myColor = Integer.parseInt(split[1], 16);
 						FactionMobs.factionColors.put(playerfaction.getName(), myColor);
-						player.sendMessage(String.format("Set your faction color to %s", StringUtils.leftPad(Integer.toHexString(myColor), 6, "0")));
+						player.sendMessage(String.format("Set your town color to %s", StringUtils.leftPad(Integer.toHexString(myColor), 6, "0")));
 						plugin.updateList();
 					} catch (NumberFormatException e) {
 						player.sendMessage(ChatColor.RED + "Invalid number");
@@ -280,13 +280,13 @@ public class FmCommand implements CommandExecutor {
 			} else if (split[0].equalsIgnoreCase("u")) {
 				if (player.isOp()) {
 					plugin.updateList();
-					player.sendMessage(ChatColor.GREEN + "Faction Mobs refreshed");
+					player.sendMessage(ChatColor.GREEN + "Towny Mobs refreshed");
 				}
 			} else if (split[0].equalsIgnoreCase("s")) {
 				if (player.isOp()) {
 					plugin.saveMobList();
-					player.sendMessage(ChatColor.GREEN + "Faction Mobs data saved");
-					System.out.println("Faction Mobs data saved via command");
+					player.sendMessage(ChatColor.GREEN + "Towny Mobs data saved");
+					System.out.println("Towny Mobs data saved via command");
 				}
 			} else if (split[0].equalsIgnoreCase("order")) {
 				if (!player.hasPermission("fmob.order")) {
@@ -308,7 +308,7 @@ public class FmCommand implements CommandExecutor {
 						fplayer = TownyUniverse.getDataSource().getResident(player.getName());
 						playerfaction = fplayer.getTown();
 					} catch (Exception ex) {
-						player.sendMessage(ChatColor.RED + "You must be in a faction.");
+						player.sendMessage(ChatColor.RED + "You must be in a town.");
 						return true;
 					}
 					List<FactionMob> selection = plugin.playerSelections.get(player.getName());
