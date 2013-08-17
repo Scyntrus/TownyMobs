@@ -35,6 +35,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.scyntrus.fmob.mobs.Titan;
+import com.palmergames.bukkit.towny.event.MobRemovalEvent;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 
@@ -331,6 +332,13 @@ public class EntityListener implements Listener {
 		if (!plugin.getServer().getScheduler().isCurrentlyRunning(FactionMobs.chunkMobLoadTask) && 
 				!plugin.getServer().getScheduler().isQueued(FactionMobs.chunkMobLoadTask)) {
 			FactionMobs.chunkMobLoadTask = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new ChunkMobLoader(plugin), 1, 1);
+		}
+	}
+	
+	@EventHandler
+	public void onTownyMobRemove(MobRemovalEvent e) {
+		if (((CraftEntity) e.getEntity()).getHandle() instanceof FactionMob) {
+			e.setCancelled(true);
 		}
 	}
 }
