@@ -20,6 +20,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -328,6 +329,13 @@ public class EntityListener implements Listener {
 	public void onTownyMobRemove(MobRemovalEvent e) {
 		if (((CraftEntity) e.getEntity()).getHandle() instanceof FactionMob) {
 			e.setCancelled(true);
+		}
+	}
+	
+	@EventHandler(priority=EventPriority.HIGHEST)
+	public void onCreatureSpawn(CreatureSpawnEvent e) {
+		if (FactionMobs.runKeepAliveTask && e.isCancelled() && ((CraftCreature) e.getEntity()).getHandle() instanceof FactionMob) {
+			e.setCancelled(false);
 		}
 	}
 }
