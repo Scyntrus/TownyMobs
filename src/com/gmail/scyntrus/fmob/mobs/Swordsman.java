@@ -7,9 +7,9 @@ import net.minecraft.server.v1_6_R2.DamageSource;
 import net.minecraft.server.v1_6_R2.Entity;
 import net.minecraft.server.v1_6_R2.EntityHuman;
 import net.minecraft.server.v1_6_R2.EntityLiving;
-import net.minecraft.server.v1_6_R2.EntityPigZombie;
 import net.minecraft.server.v1_6_R2.EntityPlayer;
 import net.minecraft.server.v1_6_R2.EntityProjectile;
+import net.minecraft.server.v1_6_R2.EntitySkeleton;
 import net.minecraft.server.v1_6_R2.EnumMonsterType;
 import net.minecraft.server.v1_6_R2.GenericAttributes;
 import net.minecraft.server.v1_6_R2.Item;
@@ -42,7 +42,7 @@ import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 
-public class Swordsman extends EntityPigZombie implements FactionMob {
+public class Swordsman extends EntitySkeleton implements FactionMob {
 	
 	public Location spawnLoc = null;
 	public Town faction = null;
@@ -82,7 +82,7 @@ public class Swordsman extends EntityPigZombie implements FactionMob {
 	    this.moveSpeed = FactionMobs.mobSpeed;
 	    getAttributeInstance(GenericAttributes.d).setValue(1.0);
 	    getAttributeInstance(GenericAttributes.a).setValue(maxHp);
-	    getAttributeInstance(GenericAttributes.e).setValue(damage);
+	    if (damage > 0) getAttributeInstance(GenericAttributes.e).setValue(damage);
 	    this.setHealth(maxHp);
 	    this.Y = 1.5F;
 	    this.getNavigation().a(false);
@@ -90,7 +90,6 @@ public class Swordsman extends EntityPigZombie implements FactionMob {
 	    this.getNavigation().c(true);
 	    this.getNavigation().d(false);
 	    this.getNavigation().e(true);
-	    this.setHealth(maxHp);
 	    try {
 			Field field = Navigation.class.getDeclaredField("e"); //TODO: Update name on version change
 			field.setAccessible(true);
@@ -113,14 +112,8 @@ public class Swordsman extends EntityPigZombie implements FactionMob {
 	    this.goalSelector.a(4, new PathfinderGoalRandomStroll(this, this.moveSpeed));
 	    this.goalSelector.a(5, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
 	    this.goalSelector.a(5, new PathfinderGoalRandomLookaround(this));
-	    getAttributeInstance(bp).setValue(0);
 	    this.getBukkitEntity().setMetadata("NPC", new FixedMetadataValue(FactionMobs.instance, true));
 	    this.getBukkitEntity().setMetadata("CustomEntity", new FixedMetadataValue(FactionMobs.instance, true));
-	}
-	
-	@Override
-	public boolean bb() {
-		return (this.getGoalTarget() == null);
 	}
 
 	@Override
