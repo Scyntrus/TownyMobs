@@ -145,6 +145,16 @@ public class Utils {
 		return Math.sqrt(Math.pow(x1-x2,2) + Math.pow(y1-y2,2) + Math.pow(z1-z2,2));
 	}
 	
+	public static double countMobPowerInFaction(Town faction) {
+		double power = 0;
+		for (FactionMob fmob : FactionMobs.mobList) {
+			if (fmob.getFactionName().equals(faction.getName())) {
+				power += fmob.getPowerCost();
+			}
+		}
+		return power;
+	}
+	
 	public static int countMobsInFaction(Town faction) {
 		int count = 0;
 		for (FactionMob fmob : FactionMobs.mobList) {

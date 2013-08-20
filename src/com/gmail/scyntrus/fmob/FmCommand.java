@@ -209,6 +209,18 @@ public class FmCommand implements CommandExecutor {
 				}
 				
 				if (!player.hasPermission("fmob.bypass")) {
+					if (newMob.getPowerCost() > 0) {
+						double factionPowerUsage = Utils.countMobPowerInFaction(playerfaction);
+						if (playerfaction.getTotalBlocks() >= (factionPowerUsage + newMob.getPowerCost())) {
+			            	player.sendMessage(String.format("%sYour town is now using %s/%s power for towny mobs.", 
+			            			ChatColor.GREEN, Math.round(factionPowerUsage + newMob.getPowerCost()), playerfaction.getTotalBlocks()));
+						} else {
+			            	player.sendMessage(String.format("%sYour town is using %s/%s power for towny mobs.", 
+			            			ChatColor.RED, Math.round(factionPowerUsage), playerfaction.getTotalBlocks()));
+			            	player.sendMessage(String.format("%sYou need %s more power.", ChatColor.RED, Math.round(factionPowerUsage + newMob.getPowerCost() - playerfaction.getTotalBlocks())));
+			                return true;
+						}
+					}
 					if (plugin.vaultEnabled && newMob.getMoneyCost() > 0) {
 						if (plugin.econ.has(player.getName(), newMob.getMoneyCost())) {
 				            EconomyResponse r = plugin.econ.withdrawPlayer(player.getName(), newMob.getMoneyCost());
