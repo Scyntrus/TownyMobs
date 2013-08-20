@@ -1,10 +1,10 @@
 
-# ===== FactionMobs Config =====
+# ===== TownyMobs Config =====
 
 # Sets the model of the mobs. Can be 0 (skeleton), 1 (zombie) or 2 (pigzombie)
 model: 2
 
-# Sets the maximum number of Faction Mobs that can spawn 
+# Sets the maximum number of towny mobs that can spawn 
 # No monsters will naturally spawn if there are too many
 spawnLimit: 60
 
@@ -19,7 +19,7 @@ attackZombies: true
 # Prevent mobs from damaging friendly players and mobs
 noFriendlyFire: true
 
-# Attacking a faction member or faction mob will agro their nearby faction mobs
+# Attacking a town resident or towny mob will agro their nearby faction mobs
 alertAllies: true
 
 # Enabling this option will allow players to heal their mobs for a set amount of health
@@ -27,11 +27,11 @@ alertAllies: true
 feedEnabled: true
 feedAmount: 5
 
-# Set the maximum number of mobs a faction can spawn, regardless of power
+# Set the maximum number of mobs a town can spawn, regardless of power
 # (0 = no limit)
 mobsPerFaction: 0
 
-# Display the mob's faction tag above the mob (in yellow)
+# Display the mob's town name above the mob (in yellow)
 displayMobFaction: true
 
 # Set the normal movement speed of the mobs (Recommend between .3 and .5, default .3)
@@ -46,11 +46,11 @@ mobNavRange: 64
 # Enables the use of /fmc, a command designed to be used by command blocks
 fmcEnabled: true
 
-# Excludes faction mobs from kill commands such as /killall (experimental)
+# Excludes towny mobs from kill commands such as /killall (experimental)
 # Set this to false if runKeepAliveTask is enabled
 excludeFromKillCommands: false
 
-# Prevents faction mobs from being killed by other plugins (Warning: Experimental, may cause lag)
+# Prevents towny mobs from being killed by other plugins (Warning: Experimental, may cause lag)
 runKeepAliveTask: false
 
 # === Mob Specific Config ===
@@ -61,7 +61,7 @@ Archer.enabled: true
 Archer.maxHp: 20
 # Custom damage, set to 0 to use default damage (normal damage is 2)
 Archer.damage: 0
-# Faction power spent upon spawning this mob
+# Town power spent upon spawning this mob (power = maximum number of plots)
 Archer.powerCost: 4.0
 # Money spent upon spawning this mob, requires Vault
 Archer.moneyCost: 0.0

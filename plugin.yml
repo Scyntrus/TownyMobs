@@ -10,7 +10,7 @@ commands:
         usage: "/fm [spawn|order|color] [parameters]"
         aliases: fmob
     fmc:
-        description: Spawn a mob on a specific faction. Designed to be used by command blocks
+        description: Spawn a mob to a specific town. Designed to be used by command blocks
         usage: "/fmc MOBTYPE TOWNNAME WORLDNAME X Y Z [EXTRAINFO]"
 permissions:
     fmob.spawn:
