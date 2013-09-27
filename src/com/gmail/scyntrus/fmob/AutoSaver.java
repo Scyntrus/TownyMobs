@@ -2,9 +2,9 @@ package com.gmail.scyntrus.fmob;
 
 public class AutoSaver implements Runnable {
 
-	FactionMobs plugin;
+	TownyMobs plugin;
 	
-    public AutoSaver(FactionMobs factionMobs) {
+    public AutoSaver(TownyMobs factionMobs) {
 		this.plugin = factionMobs;
 	}
 

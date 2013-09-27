@@ -13,12 +13,12 @@ import java.util.List;
 import java.util.Map;
 
 import net.milkbowl.vault.economy.Economy;
-import net.minecraft.server.v1_6_R2.Entity;
-import net.minecraft.server.v1_6_R2.EntityIronGolem;
-import net.minecraft.server.v1_6_R2.EntityPigZombie;
-import net.minecraft.server.v1_6_R2.EntitySkeleton;
-import net.minecraft.server.v1_6_R2.EntityTypes;
-import net.minecraft.server.v1_6_R2.EntityZombie;
+import net.minecraft.server.v1_6_R3.Entity;
+import net.minecraft.server.v1_6_R3.EntityIronGolem;
+import net.minecraft.server.v1_6_R3.EntityPigZombie;
+import net.minecraft.server.v1_6_R3.EntitySkeleton;
+import net.minecraft.server.v1_6_R3.EntityTypes;
+import net.minecraft.server.v1_6_R3.EntityZombie;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -36,15 +36,15 @@ import com.gmail.scyntrus.fmob.mobs.Titan;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 
-public class FactionMobs extends JavaPlugin {
+public class TownyMobs extends JavaPlugin {
 	
 	public PluginManager pm = null;
-	public static List<FactionMob> mobList = new ArrayList<FactionMob>();
+	public static List<TownyMob> mobList = new ArrayList<TownyMob>();
 	public static Map<String,Integer> factionColors = new HashMap<String,Integer>();
 	
 	public Map<String,Boolean> mobLeader = new HashMap<String,Boolean>();
 	
-	public Map<String,List<FactionMob>> playerSelections = new HashMap<String,List<FactionMob>>();
+	public Map<String,List<TownyMob>> playerSelections = new HashMap<String,List<TownyMob>>();
 	
 	public static long mobCount = 0;
 	
@@ -70,7 +70,7 @@ public class FactionMobs extends JavaPlugin {
 	public static double mobPatrolSpeed = .175;
 	public static double mobNavRange = 64;
 	
-	public static FactionMobs instance;
+	public static TownyMobs instance;
 	
 	public static boolean scheduleChunkMobLoad = false;
 	public static int chunkMobLoadTask = -1;
@@ -83,16 +83,16 @@ public class FactionMobs extends JavaPlugin {
 	
 	@SuppressWarnings("unchecked")
 	public void onEnable() {
-		FactionMobs.instance = this;
+		TownyMobs.instance = this;
 		this.saveDefaultConfig();
 		FileConfiguration config = this.getConfig();
 		config.options().copyDefaults(true);
     	this.saveConfig();
     	
     	try {
-    	    Class.forName("org.bukkit.craftbukkit.v1_6_R2.entity.CraftEntity");
+    	    Class.forName("org.bukkit.craftbukkit.v1_6_R3.entity.CraftEntity");
     	} catch(Exception e) {
-    	    System.out.println("[FactionMobs] You are running an unsupported version of CraftBukkit (requires 1.6.2-R0.1). FactionMobs will not be enabled.");
+    	    System.out.println("[TownyMobs] You are running an unsupported version of CraftBukkit (requires 1.6.4). TownyMobs will not be enabled.");
     	    this.getCommand("fm").setExecutor(new ErrorCommand(this));
     	    this.getCommand("fmc").setExecutor(new ErrorCommand(this));
     	    return;
@@ -102,43 +102,43 @@ public class FactionMobs extends JavaPlugin {
 		switch (config.getInt("model")) {
 		case 0: // skeleton
 			modelNum = 51;
-			//FactionMobs.sndBreath = "mob.skeleton.say";
-			FactionMobs.sndHurt = "mob.skeleton.hurt";
-			FactionMobs.sndDeath = "mob.skeleton.death";
-			FactionMobs.sndStep = "mob.skeleton.step";
+			//TownyMobs.sndBreath = "mob.skeleton.say";
+			TownyMobs.sndHurt = "mob.skeleton.hurt";
+			TownyMobs.sndDeath = "mob.skeleton.death";
+			TownyMobs.sndStep = "mob.skeleton.step";
 			break;
 		case 1: // zombie
 			modelNum = 54;
-			//FactionMobs.sndBreath = "mob.zombie.say";
-			FactionMobs.sndHurt = "mob.zombie.hurt";
-			FactionMobs.sndDeath = "mob.zombie.death";
-			FactionMobs.sndStep = "mob.zombie.step";
+			//TownyMobs.sndBreath = "mob.zombie.say";
+			TownyMobs.sndHurt = "mob.zombie.hurt";
+			TownyMobs.sndDeath = "mob.zombie.death";
+			TownyMobs.sndStep = "mob.zombie.step";
 			break;
 		case 2: // pigzombie
 			modelNum = 57;
-			//FactionMobs.sndBreath = "mob.zombiepig.zpig";
-			FactionMobs.sndHurt = "mob.zombiepig.zpighurt";
-			FactionMobs.sndDeath = "mmob.zombiepig.zpigdeath";
-			FactionMobs.sndStep = "mob.zombie.step";
+			//TownyMobs.sndBreath = "mob.zombiepig.zpig";
+			TownyMobs.sndHurt = "mob.zombiepig.zpighurt";
+			TownyMobs.sndDeath = "mmob.zombiepig.zpigdeath";
+			TownyMobs.sndStep = "mob.zombie.step";
 			break;
 		}
 
-		FactionMobs.spawnLimit = config.getInt("spawnLimit", FactionMobs.spawnLimit);
-		FactionMobs.mobsPerFaction = config.getInt("mobsPerFaction", FactionMobs.mobsPerFaction);
-		FactionMobs.noFriendlyFire = config.getBoolean("noFriendlyFire", FactionMobs.noFriendlyFire);
-		FactionMobs.alertAllies = config.getBoolean("alertAllies", FactionMobs.alertAllies);
-		FactionMobs.displayMobFaction = config.getBoolean("displayMobFaction", FactionMobs.displayMobFaction);
-		FactionMobs.attackMobs = config.getBoolean("attackMobs", FactionMobs.attackMobs);
-		FactionMobs.attackZombies = config.getBoolean("attackZombies", FactionMobs.attackZombies);
-		FactionMobs.mobSpeed = (float) config.getDouble("mobSpeed", FactionMobs.mobSpeed);
-		FactionMobs.mobPatrolSpeed = (float) config.getDouble("mobPatrolSpeed", FactionMobs.mobPatrolSpeed);
-		FactionMobs.mobNavRange = (float) config.getDouble("mobNavRange", FactionMobs.mobNavRange);
-		FactionMobs.excludeFromKillCommands = config.getBoolean("excludeFromKillCommands", FactionMobs.excludeFromKillCommands);
-		FactionMobs.runKeepAliveTask = config.getBoolean("runKeepAliveTask", FactionMobs.runKeepAliveTask);
+		TownyMobs.spawnLimit = config.getInt("spawnLimit", TownyMobs.spawnLimit);
+		TownyMobs.mobsPerFaction = config.getInt("mobsPerFaction", TownyMobs.mobsPerFaction);
+		TownyMobs.noFriendlyFire = config.getBoolean("noFriendlyFire", TownyMobs.noFriendlyFire);
+		TownyMobs.alertAllies = config.getBoolean("alertAllies", TownyMobs.alertAllies);
+		TownyMobs.displayMobFaction = config.getBoolean("displayMobFaction", TownyMobs.displayMobFaction);
+		TownyMobs.attackMobs = config.getBoolean("attackMobs", TownyMobs.attackMobs);
+		TownyMobs.attackZombies = config.getBoolean("attackZombies", TownyMobs.attackZombies);
+		TownyMobs.mobSpeed = (float) config.getDouble("mobSpeed", TownyMobs.mobSpeed);
+		TownyMobs.mobPatrolSpeed = (float) config.getDouble("mobPatrolSpeed", TownyMobs.mobPatrolSpeed);
+		TownyMobs.mobNavRange = (float) config.getDouble("mobNavRange", TownyMobs.mobNavRange);
+		TownyMobs.excludeFromKillCommands = config.getBoolean("excludeFromKillCommands", TownyMobs.excludeFromKillCommands);
+		TownyMobs.runKeepAliveTask = config.getBoolean("runKeepAliveTask", TownyMobs.runKeepAliveTask);
 		if (runKeepAliveTask) excludeFromKillCommands = false;
 
-		FactionMobs.feedEnabled = config.getBoolean("feedEnabled", FactionMobs.feedEnabled);
-		FactionMobs.feedAmount = (float) config.getDouble("feedAmount", FactionMobs.feedAmount);
+		TownyMobs.feedEnabled = config.getBoolean("feedEnabled", TownyMobs.feedEnabled);
+		TownyMobs.feedAmount = (float) config.getDouble("feedAmount", TownyMobs.feedAmount);
 		
 		Archer.maxHp = (float) config.getDouble("Archer.maxHp", Archer.maxHp);
 		if (Archer.maxHp<1) Archer.maxHp = 1;
@@ -209,11 +209,11 @@ public class FactionMobs extends JavaPlugin {
 			try {
 				FileInputStream fileInputStream = new FileInputStream(colorFile);
 		    	ObjectInputStream oInputStream = new ObjectInputStream(fileInputStream);
-		    	FactionMobs.factionColors = (HashMap<String, Integer>) oInputStream.readObject();
+		    	TownyMobs.factionColors = (HashMap<String, Integer>) oInputStream.readObject();
 		    	oInputStream.close();
 		    	fileInputStream.close();
 			} catch (Exception e) {
-	        	this.getLogger().severe("[FactionMobs] Error reading faction colors file, colors.dat");
+	        	this.getLogger().severe("[TownyMobs] Error reading faction colors file, colors.dat");
 			}
 	    }
 	    
@@ -221,7 +221,7 @@ public class FactionMobs extends JavaPlugin {
 	    	this.saveInterval = config.getLong("saveInterval", this.saveInterval);
 	    	if (this.saveInterval > 0) {
 	    		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoSaver(this), this.saveInterval, this.saveInterval);
-	    		System.out.println("[FactionMobs] Auto-Save enabled.");
+	    		System.out.println("[TownyMobs] Auto-Save enabled.");
 	    	}
 	    }
 	    
@@ -235,9 +235,9 @@ public class FactionMobs extends JavaPlugin {
             }
         }
         if (vaultEnabled) {
-        	System.out.println("[FactionMobs] Vault detected.");
+        	System.out.println("[TownyMobs] Vault detected.");
         } else {
-        	System.out.println("[FactionMobs] Vault not detected.");
+        	System.out.println("[TownyMobs] Vault not detected.");
         }
         
 		try { // using mcstats.org metrics
@@ -264,9 +264,9 @@ public class FactionMobs extends JavaPlugin {
 			@SuppressWarnings("unchecked")
 			List<List<String>> save = (List<List<String>>) conf.getList("data", new ArrayList<List<String>>());
 			for (List<String> mobData : save) {
-				FactionMob newMob = null;
+				TownyMob newMob = null;
 				if (mobData.size() < 10) {
-					System.out.println("Incomplete Faction Mob found and removed. Did you delete or rename a world?");
+					System.out.println("Incomplete Towny Mob found and removed. Did you delete or rename a world?");
 					if (!backup) {
 						backup = true;
 						try {
@@ -379,7 +379,7 @@ public class FactionMobs extends JavaPlugin {
 	public void saveMobList() {
 		YamlConfiguration conf = new YamlConfiguration();
 		List<List<String>> save = new ArrayList<List<String>>();
-		for (FactionMob fmob : mobList) {
+		for (TownyMob fmob : mobList) {
 			if (fmob.getFaction() == null) {
 				continue;
 			}
@@ -404,7 +404,7 @@ public class FactionMobs extends JavaPlugin {
 		conf.set("data", save);
 		try {
 			conf.save(new File(getDataFolder(), "data.dat"));
-			System.out.println("FactionMobs data saved.");
+			System.out.println("TownyMobs data saved.");
 		} catch (IOException e) {
         	this.getLogger().severe("Failed to save faction mob data, data.dat");
 		}
@@ -413,10 +413,10 @@ public class FactionMobs extends JavaPlugin {
 		    colorFile.createNewFile();
 			FileOutputStream fileOut = new FileOutputStream(colorFile);
 	    	ObjectOutputStream oOut = new ObjectOutputStream(fileOut);
-	    	oOut.writeObject(FactionMobs.factionColors);
+	    	oOut.writeObject(TownyMobs.factionColors);
 	    	oOut.close();
 	    	fileOut.close();
-			System.out.println("FactionMobs color data saved.");
+			System.out.println("TownyMobs color data saved.");
 		} catch (Exception e) {
         	this.getLogger().severe("Error writing faction colors file, colors.dat");
 		}

@@ -1,12 +1,12 @@
 package com.gmail.scyntrus.fmob;
 
-import net.minecraft.server.v1_6_R2.Entity;
+import net.minecraft.server.v1_6_R3.Entity;
 
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_6_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 
@@ -19,9 +19,9 @@ import com.palmergames.bukkit.towny.object.TownyUniverse;
 
 public class FmcCommand implements CommandExecutor {
 
-	FactionMobs plugin;
+	TownyMobs plugin;
 	
-	public FmcCommand(FactionMobs plugin) {
+	public FmcCommand(TownyMobs plugin) {
 		this.plugin = plugin;
 	}
 	
@@ -34,7 +34,7 @@ public class FmcCommand implements CommandExecutor {
 			}
 		}
 		
-		if (FactionMobs.mobList.size() >= FactionMobs.spawnLimit) {
+		if (TownyMobs.mobList.size() >= TownyMobs.spawnLimit) {
 			sender.sendMessage("There are too many faction mobs");
 			return true;
 		}
@@ -49,7 +49,7 @@ public class FmcCommand implements CommandExecutor {
 			sender.sendMessage("World not found");
 			return false;
 		}
-		net.minecraft.server.v1_6_R2.World world = ((CraftWorld)craftWorld).getHandle();
+		net.minecraft.server.v1_6_R3.World world = ((CraftWorld)craftWorld).getHandle();
 		
 		Location loc = null;
 		try {
@@ -72,7 +72,7 @@ public class FmcCommand implements CommandExecutor {
 			return false;
 		}
 		
-		FactionMob newMob = null;
+		TownyMob newMob = null;
 		if (split[0].equalsIgnoreCase("Archer") || split[0].equalsIgnoreCase("Ranger")) {
 			newMob = new Archer(loc, faction);
 		} else if (split[0].equalsIgnoreCase("Swordsman")) {
@@ -93,7 +93,7 @@ public class FmcCommand implements CommandExecutor {
 		}
 				
 		world.addEntity((Entity) newMob, SpawnReason.CUSTOM);
-		FactionMobs.mobList.add(newMob);
+		TownyMobs.mobList.add(newMob);
 		
 		if (split.length > 6) {
 			if (split[6].equalsIgnoreCase("moveToPoint") || split[6].equalsIgnoreCase("move") || split[6].equalsIgnoreCase("point")) {

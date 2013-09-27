@@ -7,9 +7,9 @@ import org.bukkit.event.server.ServerCommandEvent;
 
 public class CommandListener implements Listener {
 	
-	FactionMobs plugin;
+	TownyMobs plugin;
 	
-	public CommandListener(FactionMobs plugin) {
+	public CommandListener(TownyMobs plugin) {
 		this.plugin = plugin;
 	}
 	
@@ -29,7 +29,7 @@ public class CommandListener implements Listener {
 		if (e.getPlayer().isOp() && e.getMessage().toLowerCase().startsWith("save-all")) {
 			plugin.saveMobList();
 		}
-		if (FactionMobs.excludeFromKillCommands && e.getMessage().toLowerCase().contains("kill")) {
+		if (TownyMobs.excludeFromKillCommands && e.getMessage().toLowerCase().contains("kill")) {
 			checkDeath();
 		}
 	}
@@ -39,7 +39,7 @@ public class CommandListener implements Listener {
 		if (e.getCommand().toLowerCase().startsWith("save-all")) {
 			plugin.saveMobList();
 		}
-		if (FactionMobs.excludeFromKillCommands && e.getCommand().toLowerCase().contains("kill")) {
+		if (TownyMobs.excludeFromKillCommands && e.getCommand().toLowerCase().contains("kill")) {
 			checkDeath();
 		}
 	}

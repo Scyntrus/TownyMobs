@@ -3,17 +3,17 @@ package com.gmail.scyntrus.fmob;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.server.v1_6_R2.Entity;
-import net.minecraft.server.v1_6_R2.EntityInsentient;
-import net.minecraft.server.v1_6_R2.EntityWolf;
+import net.minecraft.server.v1_6_R3.Entity;
+import net.minecraft.server.v1_6_R3.EntityInsentient;
+import net.minecraft.server.v1_6_R3.EntityWolf;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_6_R2.entity.CraftCreature;
-import org.bukkit.craftbukkit.v1_6_R2.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_6_R2.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftCreature;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -41,18 +41,18 @@ import com.palmergames.bukkit.towny.object.TownyUniverse;
 
 public class EntityListener implements Listener {
 	
-	FactionMobs plugin;
+	TownyMobs plugin;
 	
-	public EntityListener(FactionMobs plugin) {
+	public EntityListener(TownyMobs plugin) {
 		this.plugin = plugin;
 	}
 	
 	@EventHandler
 	public void onEntityTarget(EntityTargetEvent e) {
 		Entity entity = ((CraftEntity) e.getEntity()).getHandle();
-		if (entity != null && entity instanceof FactionMob) {
+		if (entity != null && entity instanceof TownyMob) {
 			e.setCancelled(true);
-			FactionMob fmob = (FactionMob) entity;
+			TownyMob fmob = (TownyMob) entity;
 			if (fmob instanceof Titan) {
 				fmob.findTarget();
 				return;
@@ -69,9 +69,9 @@ public class EntityListener implements Listener {
 		} else if (entity != null && entity instanceof EntityWolf) {
 			if (e.getTarget() != null) {
 				Entity target = ((CraftEntity) e.getTarget()).getHandle();
-				if (target instanceof FactionMob) {
+				if (target instanceof TownyMob) {
 					EntityWolf wolf = (EntityWolf) entity;
-					FactionMob fmob = (FactionMob) target;
+					TownyMob fmob = (TownyMob) target;
 					if (wolf.isAngry()) {
 						return;
 					} else if (wolf.isTamed()) {
@@ -101,8 +101,8 @@ public class EntityListener implements Listener {
 	
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEntityEvent e) {
-		if (((CraftEntity)e.getRightClicked()).getHandle() instanceof FactionMob) {
-			FactionMob fmob = (FactionMob) ((CraftEntity)e.getRightClicked()).getHandle();
+		if (((CraftEntity)e.getRightClicked()).getHandle() instanceof TownyMob) {
+			TownyMob fmob = (TownyMob) ((CraftEntity)e.getRightClicked()).getHandle();
 			if (fmob.getFaction() == null) {
 				return;
 			}
@@ -113,7 +113,7 @@ public class EntityListener implements Listener {
 			try {
 				if (player.hasPermission("fmob.order") && TownyUniverse.getDataSource().getResident(player.getName()).getTown().equals(fmob.getFaction())) {
 					if (!plugin.playerSelections.containsKey(player.getName())) {
-						plugin.playerSelections.put(player.getName(), new ArrayList<FactionMob>());
+						plugin.playerSelections.put(player.getName(), new ArrayList<TownyMob>());
 					}
 					if (plugin.playerSelections.get(player.getName()).contains(fmob)) {
 						plugin.playerSelections.get(player.getName()).remove(fmob);
@@ -131,11 +131,11 @@ public class EntityListener implements Listener {
 				}
 			} catch (Exception ex) {}
 			fmob.updateMob();
-			if (FactionMobs.feedEnabled) {
+			if (TownyMobs.feedEnabled) {
 				if (player.getItemInHand().getType() == Material.APPLE) {
 					player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
 					float iHp = fmob.getHealth();
-					fmob.setHealth(fmob.getHealth() + FactionMobs.feedAmount);
+					fmob.setHealth(fmob.getHealth() + TownyMobs.feedAmount);
 					player.sendMessage(String.format("%sThis mob has been healed by %s%s", ChatColor.GREEN, ChatColor.RED, fmob.getHealth() - iHp));
 				}
 			}
@@ -144,10 +144,10 @@ public class EntityListener implements Listener {
 	
 	@EventHandler
 	public void onEntityDeath(EntityDeathEvent e) {
-		if (((CraftEntity) e.getEntity()).getHandle() instanceof FactionMob) {
+		if (((CraftEntity) e.getEntity()).getHandle() instanceof TownyMob) {
 			((CraftEntity) e.getEntity()).getHandle().die();
 			e.getDrops().clear();
-			e.getDrops().add(new ItemStack(((FactionMob) ((CraftEntity) e.getEntity()).getHandle()).getDrops()));
+			e.getDrops().add(new ItemStack(((TownyMob) ((CraftEntity) e.getEntity()).getHandle()).getDrops()));
 		}
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
         	public void run() {
@@ -164,8 +164,8 @@ public class EntityListener implements Listener {
 		if (damager instanceof Projectile) damager = (CraftEntity) ((Projectile) damager).getShooter();
 		if (damager == null) return;
 		
-		if (damager.getHandle() instanceof FactionMob) {
-			FactionMob fmob = (FactionMob) damager.getHandle();
+		if (damager.getHandle() instanceof TownyMob) {
+			TownyMob fmob = (TownyMob) damager.getHandle();
 			if (Utils.FactionCheck(entity.getHandle(), fmob.getFaction()) < 1) {
 				if (fmob.isAlive()) {
 					if (entity instanceof CraftCreature) {
@@ -176,13 +176,13 @@ public class EntityListener implements Listener {
 					}
 					return;
 				}
-			} else if (FactionMobs.noFriendlyFire) {
+			} else if (TownyMobs.noFriendlyFire) {
 				e.setCancelled(true);
 				return;
 			}
 		} else if ((damager instanceof Player)
-				&& (entity.getHandle() instanceof FactionMob)) {
-			FactionMob fmob = (FactionMob) entity.getHandle();
+				&& (entity.getHandle() instanceof TownyMob)) {
+			TownyMob fmob = (TownyMob) entity.getHandle();
 			Player player = (Player) damager;
 			try {
 			if (Utils.FactionCheck(((CraftPlayer) player).getHandle(), fmob.getFaction()) >= 1) {
@@ -198,15 +198,15 @@ public class EntityListener implements Listener {
 			} catch (Exception ex) {}
 		}
 		
-		if (!FactionMobs.alertAllies || damager.isDead()) {
+		if (!TownyMobs.alertAllies || damager.isDead()) {
 			return;
 		}
-		if (entity.getHandle() instanceof FactionMob) {
-			Town faction = ((FactionMob) entity.getHandle()).getFaction();
+		if (entity.getHandle() instanceof TownyMob) {
+			Town faction = ((TownyMob) entity.getHandle()).getFaction();
 			List<org.bukkit.entity.Entity> aoeList = entity.getNearbyEntities(8, 8, 8);
 			for (org.bukkit.entity.Entity nearEntity : aoeList) {
-				if (((CraftEntity) nearEntity).getHandle() instanceof FactionMob) {
-					FactionMob fmob2 = (FactionMob) ((CraftEntity) nearEntity).getHandle();
+				if (((CraftEntity) nearEntity).getHandle() instanceof TownyMob) {
+					TownyMob fmob2 = (TownyMob) ((CraftEntity) nearEntity).getHandle();
 					if (Utils.FactionCheck(fmob2.getEntity(), faction) == 1 && 
 							Utils.FactionCheck(damager.getHandle(), faction) < 1) {
 						fmob2.softAgro(damager.getHandle());
@@ -218,8 +218,8 @@ public class EntityListener implements Listener {
 				Town faction = TownyUniverse.getDataSource().getResident(((Player) entity).getName()).getTown();
 				List<org.bukkit.entity.Entity> aoeList = entity.getNearbyEntities(8, 8, 8);
 				for (org.bukkit.entity.Entity nearEntity : aoeList) {
-					if (((CraftEntity) nearEntity).getHandle() instanceof FactionMob) {
-						FactionMob fmob2 = (FactionMob) ((CraftEntity) nearEntity).getHandle();
+					if (((CraftEntity) nearEntity).getHandle() instanceof TownyMob) {
+						TownyMob fmob2 = (TownyMob) ((CraftEntity) nearEntity).getHandle();
 						if (Utils.FactionCheck(fmob2.getEntity(), faction) == 1 && 
 								Utils.FactionCheck(damager.getHandle(), faction) < 1) {
 							fmob2.softAgro(damager.getHandle());
@@ -236,16 +236,16 @@ public class EntityListener implements Listener {
 		if (lastDamage instanceof EntityDamageByEntityEvent) {
 			org.bukkit.entity.Entity entity = ((EntityDamageByEntityEvent) lastDamage).getDamager();
 			if (entity != null) {
-				if (((CraftEntity) entity).getHandle() instanceof FactionMob) {
-					FactionMob fmob = (FactionMob) ((CraftEntity) entity).getHandle();
+				if (((CraftEntity) entity).getHandle() instanceof TownyMob) {
+					TownyMob fmob = (TownyMob) ((CraftEntity) entity).getHandle();
 					if (fmob.getFaction() == null) {
 						return;
 					}
 					e.setDeathMessage(e.getEntity().getDisplayName() + " was killed by " + ChatColor.RED + fmob.getFactionName() + ChatColor.RESET + "'s " + ChatColor.RED + fmob.getTypeName());
 				} else if (entity instanceof Projectile){
 					Projectile arrow = (Projectile) entity;
-					if (((CraftLivingEntity) arrow.getShooter()).getHandle() instanceof FactionMob) {
-						FactionMob fmob = (FactionMob) ((CraftLivingEntity) arrow.getShooter()).getHandle();
+					if (((CraftLivingEntity) arrow.getShooter()).getHandle() instanceof TownyMob) {
+						TownyMob fmob = (TownyMob) ((CraftLivingEntity) arrow.getShooter()).getHandle();
 						if (fmob.getFaction() == null) {
 							return;
 						}
@@ -274,7 +274,7 @@ public class EntityListener implements Listener {
 			Player player = e.getPlayer();
 			Location loc = player.getLocation();
 			int count = 0;
-			for (FactionMob fmob : plugin.playerSelections.get(player.getName())) {
+			for (TownyMob fmob : plugin.playerSelections.get(player.getName())) {
 				if (fmob.getSpawn().getWorld().getName().equals(loc.getWorld().getName())) {
 					double tmpX = (1.5-(count%4))*1.5;
 					double tmpZ = ((-1.) - Math.floor(count / 4.))*1.5;
@@ -290,8 +290,8 @@ public class EntityListener implements Listener {
 	@EventHandler
 	public void onPotionSplash(PotionSplashEvent e) {
 		if (e.getPotion().getShooter() == null) return;
-		if (((CraftEntity) e.getPotion().getShooter()).getHandle() instanceof FactionMob) {
-			FactionMob fmob = (FactionMob) ((CraftEntity) e.getPotion().getShooter()).getHandle();
+		if (((CraftEntity) e.getPotion().getShooter()).getHandle() instanceof TownyMob) {
+			TownyMob fmob = (TownyMob) ((CraftEntity) e.getPotion().getShooter()).getHandle();
 			for (LivingEntity entity : e.getAffectedEntities()) {
 				if (Utils.FactionCheck(((CraftEntity) entity).getHandle(), fmob.getFaction()) < 1) {
 					if (fmob.isAlive()) {
@@ -302,7 +302,7 @@ public class EntityListener implements Listener {
 							((EntityInsentient) ((CraftLivingEntity) entity).getHandle()).setGoalTarget(((CraftLivingEntity) e.getPotion().getShooter()).getHandle());
 						}
 					}
-				} else if (FactionMobs.noFriendlyFire) {
+				} else if (TownyMobs.noFriendlyFire) {
 					e.setIntensity(entity, -1);
 				}
 			}
@@ -311,30 +311,30 @@ public class EntityListener implements Listener {
 	
 	@EventHandler
 	public void onEntityPortal(EntityPortalEvent e) {
-		if (((CraftEntity) e.getEntity()).getHandle() instanceof FactionMob) {
+		if (((CraftEntity) e.getEntity()).getHandle() instanceof TownyMob) {
 			e.setCancelled(true);
 		}
 	}
 
 	@EventHandler(priority=EventPriority.MONITOR)
 	public void onChunkLoad(ChunkLoadEvent e) {
-		FactionMobs.scheduleChunkMobLoad = true;
-		if (!plugin.getServer().getScheduler().isCurrentlyRunning(FactionMobs.chunkMobLoadTask) && 
-				!plugin.getServer().getScheduler().isQueued(FactionMobs.chunkMobLoadTask)) {
-			FactionMobs.chunkMobLoadTask = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new ChunkMobLoader(plugin), 1, 1);
+		TownyMobs.scheduleChunkMobLoad = true;
+		if (!plugin.getServer().getScheduler().isCurrentlyRunning(TownyMobs.chunkMobLoadTask) && 
+				!plugin.getServer().getScheduler().isQueued(TownyMobs.chunkMobLoadTask)) {
+			TownyMobs.chunkMobLoadTask = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new ChunkMobLoader(plugin), 1, 1);
 		}
 	}
 	
 	@EventHandler
 	public void onTownyMobRemove(MobRemovalEvent e) {
-		if (((CraftEntity) e.getEntity()).getHandle() instanceof FactionMob) {
+		if (((CraftEntity) e.getEntity()).getHandle() instanceof TownyMob) {
 			e.setCancelled(true);
 		}
 	}
 	
 	@EventHandler(priority=EventPriority.HIGHEST)
 	public void onCreatureSpawn(CreatureSpawnEvent e) {
-		if (FactionMobs.runKeepAliveTask && e.isCancelled() && ((CraftLivingEntity) e.getEntity()).getHandle() instanceof FactionMob) {
+		if (TownyMobs.runKeepAliveTask && e.isCancelled() && ((CraftLivingEntity) e.getEntity()).getHandle() instanceof TownyMob) {
 			e.setCancelled(false);
 		}
 	}

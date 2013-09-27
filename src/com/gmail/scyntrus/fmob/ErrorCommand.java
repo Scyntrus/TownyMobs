@@ -7,9 +7,9 @@ import org.bukkit.command.CommandSender;
 
 public class ErrorCommand implements CommandExecutor {
 	
-	FactionMobs plugin;
+	TownyMobs plugin;
 	
-	public ErrorCommand(FactionMobs plugin) {
+	public ErrorCommand(TownyMobs plugin) {
 		this.plugin = plugin;
 	}
 	

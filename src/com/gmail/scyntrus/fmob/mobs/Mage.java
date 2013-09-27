@@ -2,46 +2,46 @@ package com.gmail.scyntrus.fmob.mobs;
 
 import java.lang.reflect.Field;
 
-import net.minecraft.server.v1_6_R2.AttributeInstance;
-import net.minecraft.server.v1_6_R2.DamageSource;
-import net.minecraft.server.v1_6_R2.Entity;
-import net.minecraft.server.v1_6_R2.EntityHuman;
-import net.minecraft.server.v1_6_R2.EntityLiving;
-import net.minecraft.server.v1_6_R2.EntityPlayer;
-import net.minecraft.server.v1_6_R2.EntityProjectile;
-import net.minecraft.server.v1_6_R2.EntityWitch;
-import net.minecraft.server.v1_6_R2.EnumMonsterType;
-import net.minecraft.server.v1_6_R2.GenericAttributes;
-import net.minecraft.server.v1_6_R2.Item;
-import net.minecraft.server.v1_6_R2.ItemStack;
-import net.minecraft.server.v1_6_R2.MathHelper;
-import net.minecraft.server.v1_6_R2.NBTTagCompound;
-import net.minecraft.server.v1_6_R2.Navigation;
-import net.minecraft.server.v1_6_R2.PathfinderGoal;
-import net.minecraft.server.v1_6_R2.PathfinderGoalArrowAttack;
-import net.minecraft.server.v1_6_R2.PathfinderGoalFloat;
-import net.minecraft.server.v1_6_R2.PathfinderGoalLookAtPlayer;
-import net.minecraft.server.v1_6_R2.PathfinderGoalRandomLookaround;
-import net.minecraft.server.v1_6_R2.PathfinderGoalRandomStroll;
-import net.minecraft.server.v1_6_R2.PathfinderGoalSelector;
-import net.minecraft.server.v1_6_R2.World;
+import net.minecraft.server.v1_6_R3.AttributeInstance;
+import net.minecraft.server.v1_6_R3.DamageSource;
+import net.minecraft.server.v1_6_R3.Entity;
+import net.minecraft.server.v1_6_R3.EntityHuman;
+import net.minecraft.server.v1_6_R3.EntityLiving;
+import net.minecraft.server.v1_6_R3.EntityPlayer;
+import net.minecraft.server.v1_6_R3.EntityProjectile;
+import net.minecraft.server.v1_6_R3.EntityWitch;
+import net.minecraft.server.v1_6_R3.EnumMonsterType;
+import net.minecraft.server.v1_6_R3.GenericAttributes;
+import net.minecraft.server.v1_6_R3.Item;
+import net.minecraft.server.v1_6_R3.ItemStack;
+import net.minecraft.server.v1_6_R3.MathHelper;
+import net.minecraft.server.v1_6_R3.NBTTagCompound;
+import net.minecraft.server.v1_6_R3.Navigation;
+import net.minecraft.server.v1_6_R3.PathfinderGoal;
+import net.minecraft.server.v1_6_R3.PathfinderGoalArrowAttack;
+import net.minecraft.server.v1_6_R3.PathfinderGoalFloat;
+import net.minecraft.server.v1_6_R3.PathfinderGoalLookAtPlayer;
+import net.minecraft.server.v1_6_R3.PathfinderGoalRandomLookaround;
+import net.minecraft.server.v1_6_R3.PathfinderGoalRandomStroll;
+import net.minecraft.server.v1_6_R3.PathfinderGoalSelector;
+import net.minecraft.server.v1_6_R3.World;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_6_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_6_R2.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_6_R2.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_6_R2.util.UnsafeList;
+import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_6_R3.util.UnsafeList;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import com.gmail.scyntrus.fmob.FactionMob;
-import com.gmail.scyntrus.fmob.FactionMobs;
+import com.gmail.scyntrus.fmob.TownyMob;
+import com.gmail.scyntrus.fmob.TownyMobs;
 import com.gmail.scyntrus.fmob.Utils;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 
-public class Mage extends EntityWitch implements FactionMob {
+public class Mage extends EntityWitch implements TownyMob {
 	
 	public Location spawnLoc = null;
 	public Town faction = null;
@@ -70,14 +70,14 @@ public class Mage extends EntityWitch implements FactionMob {
 		this.setSpawn(spawnLoc);
 		this.setFaction(faction);
 		Utils.giveColorArmor(this);
-		if (FactionMobs.displayMobFaction) {
+		if (TownyMobs.displayMobFaction) {
 			this.setCustomName(ChatColor.YELLOW + this.factionName + " " + typeName);
 			this.setCustomNameVisible(true);
 		}
 	    this.persistent = true;
 	    this.fireProof = false;
 	    this.canPickUpLoot = false;
-	    this.moveSpeed = FactionMobs.mobSpeed;
+	    this.moveSpeed = TownyMobs.mobSpeed;
 	    getAttributeInstance(GenericAttributes.d).setValue(1.0);
 	    getAttributeInstance(GenericAttributes.a).setValue(maxHp);
 	    this.setHealth(maxHp);
@@ -92,7 +92,7 @@ public class Mage extends EntityWitch implements FactionMob {
 			Field field = Navigation.class.getDeclaredField("e"); //TODO: Update name on version change
 			field.setAccessible(true);
 			AttributeInstance e = (AttributeInstance) field.get(this.getNavigation());
-			e.setValue(FactionMobs.mobNavRange);
+			e.setValue(TownyMobs.mobNavRange);
 		} catch (Exception e) {
 		}
 		this.setEquipment(0, new ItemStack(Item.POTION, 1, 8204));
@@ -109,8 +109,8 @@ public class Mage extends EntityWitch implements FactionMob {
 	    this.goalSelector.a(2, new PathfinderGoalRandomStroll(this, this.moveSpeed));
 	    this.goalSelector.a(3, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
 	    this.goalSelector.a(3, new PathfinderGoalRandomLookaround(this));
-	    this.getBukkitEntity().setMetadata("NPC", new FixedMetadataValue(FactionMobs.instance, true));
-	    this.getBukkitEntity().setMetadata("CustomEntity", new FixedMetadataValue(FactionMobs.instance, true));
+	    this.getBukkitEntity().setMetadata("NPC", new FixedMetadataValue(TownyMobs.instance, true));
+	    this.getBukkitEntity().setMetadata("CustomEntity", new FixedMetadataValue(TownyMobs.instance, true));
 	}
 
 	@Override
@@ -130,28 +130,28 @@ public class Mage extends EntityWitch implements FactionMob {
 			}
 			if (this.getGoalTarget() == null) {
 				if (this.order.equals("home") || this.order == null || this.order.equals("")) {
-					this.getNavigation().a(spawnLoc.getX(), spawnLoc.getY(), spawnLoc.getZ(), FactionMobs.mobSpeed);
+					this.getNavigation().a(spawnLoc.getX(), spawnLoc.getY(), spawnLoc.getZ(), TownyMobs.mobSpeed);
 					this.order = "home";
 					return;
 				} else if (this.order.equals("poi")) {
-					this.getNavigation().a(this.poiX, this.poiY, this.poiZ, FactionMobs.mobSpeed);
+					this.getNavigation().a(this.poiX, this.poiY, this.poiZ, TownyMobs.mobSpeed);
 					return;
 				} else if (this.order.equals("wander")) {
 					return;
 				} else if (this.order.equals("phome")) {
-					this.getNavigation().a(this.spawnLoc.getX(), this.spawnLoc.getY(), this.spawnLoc.getZ(), FactionMobs.mobPatrolSpeed);
+					this.getNavigation().a(this.spawnLoc.getX(), this.spawnLoc.getY(), this.spawnLoc.getZ(), TownyMobs.mobPatrolSpeed);
 					if (Utils.dist3D(this.locX,this.spawnLoc.getX(),this.locY,this.spawnLoc.getY(),this.locZ,this.spawnLoc.getZ()) < 1) {
 						this.order = "ppoi";
 					}
 					return;
 				} else if (this.order.equals("ppoi")) {
-					this.getNavigation().a(poiX, poiY, poiZ, FactionMobs.mobPatrolSpeed);
+					this.getNavigation().a(poiX, poiY, poiZ, TownyMobs.mobPatrolSpeed);
 					if (Utils.dist3D(this.locX,this.poiX,this.locY,this.poiY,this.locZ,this.poiZ) < 1) {
 						this.order = "phome";
 					}
 					return;
 				} else if (this.order.equals("path")) {
-					this.getNavigation().a(poiX, poiY, poiZ, FactionMobs.mobPatrolSpeed);
+					this.getNavigation().a(poiX, poiY, poiZ, TownyMobs.mobPatrolSpeed);
 					if (Utils.dist3D(this.locX,this.poiX,this.locY,this.poiY,this.locZ,this.poiZ) < 1) {
 						this.order = "home";
 					}
@@ -351,22 +351,22 @@ public class Mage extends EntityWitch implements FactionMob {
 
 	@Override
 	protected String r() {
-	    return FactionMobs.sndBreath;
-	}
-
-	@Override
-	protected String aN() {
-	    return FactionMobs.sndHurt;
+	    return TownyMobs.sndBreath;
 	}
 
 	@Override
 	protected String aO() {
-	    return FactionMobs.sndDeath;
+	    return TownyMobs.sndHurt;
+	}
+
+	@Override
+	protected String aP() {
+	    return TownyMobs.sndDeath;
 	}
 
 	@Override
 	protected void a(int i, int j, int k, int l) {
-	    makeSound(FactionMobs.sndStep, 0.15F, 1.0F);
+	    makeSound(TownyMobs.sndStep, 0.15F, 1.0F);
 	}
 
 	@Override
@@ -441,8 +441,8 @@ public class Mage extends EntityWitch implements FactionMob {
 		this.setEquipment(2, null);
 		this.setEquipment(3, null);
 		this.setEquipment(4, null);
-		if (FactionMobs.mobList.contains(this)) {
-			FactionMobs.mobList.remove(this);
+		if (TownyMobs.mobList.contains(this)) {
+			TownyMobs.mobList.remove(this);
 		}
 	}
 

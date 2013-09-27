@@ -1,19 +1,19 @@
 package com.gmail.scyntrus.fmob;
 
-import net.minecraft.server.v1_6_R2.Entity;
-import net.minecraft.server.v1_6_R2.EntityAnimal;
-import net.minecraft.server.v1_6_R2.EntityCreeper;
-import net.minecraft.server.v1_6_R2.EntityEnderDragon;
-import net.minecraft.server.v1_6_R2.EntityGhast;
-import net.minecraft.server.v1_6_R2.EntityMonster;
-import net.minecraft.server.v1_6_R2.EntityPlayer;
-import net.minecraft.server.v1_6_R2.EntitySlime;
-import net.minecraft.server.v1_6_R2.EntityWither;
-import net.minecraft.server.v1_6_R2.EntityWolf;
-import net.minecraft.server.v1_6_R2.EntityZombie;
-import net.minecraft.server.v1_6_R2.Item;
-import net.minecraft.server.v1_6_R2.ItemStack;
-import net.minecraft.server.v1_6_R2.NBTTagCompound;
+import net.minecraft.server.v1_6_R3.Entity;
+import net.minecraft.server.v1_6_R3.EntityAnimal;
+import net.minecraft.server.v1_6_R3.EntityCreeper;
+import net.minecraft.server.v1_6_R3.EntityEnderDragon;
+import net.minecraft.server.v1_6_R3.EntityGhast;
+import net.minecraft.server.v1_6_R3.EntityMonster;
+import net.minecraft.server.v1_6_R3.EntityPlayer;
+import net.minecraft.server.v1_6_R3.EntitySlime;
+import net.minecraft.server.v1_6_R3.EntityWither;
+import net.minecraft.server.v1_6_R3.EntityWolf;
+import net.minecraft.server.v1_6_R3.EntityZombie;
+import net.minecraft.server.v1_6_R3.Item;
+import net.minecraft.server.v1_6_R3.ItemStack;
+import net.minecraft.server.v1_6_R3.NBTTagCompound;
 
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -42,8 +42,8 @@ public class Utils {
 			} catch (Exception ex) {
 				return 0;
 			}
-		} else if (entity instanceof FactionMob) {
-			FactionMob fmob = (FactionMob) entity;
+		} else if (entity instanceof TownyMob) {
+			TownyMob fmob = (TownyMob) entity;
 			try {
 				if (fmob.getFaction() == null) return 0;
 				if (fmob.getFaction().equals(faction)) return 1;
@@ -70,12 +70,12 @@ public class Utils {
 			}
 		} else if (entity instanceof EntityCreeper) {
 			return 1;
-		} else if (!FactionMobs.attackMobs) {
+		} else if (!TownyMobs.attackMobs) {
 			return 0;
 		} else if (entity instanceof EntityAnimal) {
 			return 0;
 		} else if (entity instanceof EntityZombie) {
-			if (FactionMobs.attackZombies) {
+			if (TownyMobs.attackZombies) {
 				return -1;
 			}
 			return 0;
@@ -95,14 +95,14 @@ public class Utils {
 		return 0;
 	}
 	
-	public static void giveColorArmor(FactionMob entity) {
+	public static void giveColorArmor(TownyMob entity) {
 		int color = -1;
 		if (entity.getFaction() == null) {
 			return;
-		} else if (FactionMobs.factionColors.containsKey(entity.getFaction().getName())) {
-			color = FactionMobs.factionColors.get(entity.getFaction().getName());
+		} else if (TownyMobs.factionColors.containsKey(entity.getFaction().getName())) {
+			color = TownyMobs.factionColors.get(entity.getFaction().getName());
 		} else {
-			FactionMobs.factionColors.put(entity.getFaction().getName(), 10511680);
+			TownyMobs.factionColors.put(entity.getFaction().getName(), 10511680);
 		}
 		
 		if (color == -1 || color == 10511680) {
@@ -137,7 +137,7 @@ public class Utils {
         return;
 	}
 	
-	public FactionMob mobCreate() { // not implemented yet
+	public TownyMob mobCreate() { // not implemented yet
 		return null;
 	}
 	
@@ -147,7 +147,7 @@ public class Utils {
 	
 	public static double countMobPowerInFaction(Town faction) {
 		double power = 0;
-		for (FactionMob fmob : FactionMobs.mobList) {
+		for (TownyMob fmob : TownyMobs.mobList) {
 			if (fmob.getFactionName().equals(faction.getName())) {
 				power += fmob.getPowerCost();
 			}
@@ -157,7 +157,7 @@ public class Utils {
 	
 	public static int countMobsInFaction(Town faction) {
 		int count = 0;
-		for (FactionMob fmob : FactionMobs.mobList) {
+		for (TownyMob fmob : TownyMobs.mobList) {
 			if (fmob.getFactionName().equals(faction.getName())) {
 				count++;
 			}

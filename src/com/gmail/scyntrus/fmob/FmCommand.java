@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.milkbowl.vault.economy.EconomyResponse;
-import net.minecraft.server.v1_6_R2.Entity;
+import net.minecraft.server.v1_6_R3.Entity;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
@@ -13,7 +13,7 @@ import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_6_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 
@@ -27,9 +27,9 @@ import com.palmergames.bukkit.towny.object.TownyUniverse;
 
 public class FmCommand implements CommandExecutor {
 
-	FactionMobs plugin;
+	TownyMobs plugin;
 	
-	public FmCommand(FactionMobs plugin) {
+	public FmCommand(TownyMobs plugin) {
 		this.plugin = plugin;
 	}
 	
@@ -103,11 +103,11 @@ public class FmCommand implements CommandExecutor {
 				if (plugin.playerSelections.containsKey(player.getName())) {
 					plugin.playerSelections.get(player.getName()).clear();
 				} else {
-					plugin.playerSelections.put(player.getName(), new ArrayList<FactionMob>());
+					plugin.playerSelections.put(player.getName(), new ArrayList<TownyMob>());
 				}
 				try {
 					Resident fplayer = TownyUniverse.getDataSource().getResident(player.getName());
-					for (FactionMob fmob : FactionMobs.mobList) {
+					for (TownyMob fmob : TownyMobs.mobList) {
 						if (fmob.getFaction().getName().equals(fplayer.getTown().getName())) {
 							plugin.playerSelections.get(player.getName()).add(fmob);
 						}
@@ -121,7 +121,7 @@ public class FmCommand implements CommandExecutor {
 			} else if (split[0].equalsIgnoreCase("selection")) {
 				if (plugin.playerSelections.containsKey(player.getName())) {
 					player.sendMessage(ChatColor.GREEN + "== Selection: ==");
-					for (FactionMob fmob : plugin.playerSelections.get(player.getName())) {
+					for (TownyMob fmob : plugin.playerSelections.get(player.getName())) {
 						if (fmob.isAlive()) player.sendMessage(ChatColor.RED + fmob.getTypeName());
 					}
 					player.sendMessage(ChatColor.GREEN + "================");
@@ -158,19 +158,19 @@ public class FmCommand implements CommandExecutor {
 						player.sendMessage(ChatColor.RED + "You may only spawn mobs in your town");
 						return true;
 					}
-					if (FactionMobs.mobList.size() >= FactionMobs.spawnLimit) {
+					if (TownyMobs.mobList.size() >= TownyMobs.spawnLimit) {
 						player.sendMessage(ChatColor.RED + "There are too many towny mobs");
 						return true;
 					}
-					if (FactionMobs.mobsPerFaction > 0) {
-						if (Utils.countMobsInFaction(playerfaction) >= FactionMobs.mobsPerFaction) {
+					if (TownyMobs.mobsPerFaction > 0) {
+						if (Utils.countMobsInFaction(playerfaction) >= TownyMobs.mobsPerFaction) {
 							player.sendMessage(ChatColor.RED + "Your faction has too many towny mobs.");
 							return true;
 						}
 					}
 				}
-				net.minecraft.server.v1_6_R2.World world = ((CraftWorld)player.getWorld()).getHandle();
-				FactionMob newMob = null;
+				net.minecraft.server.v1_6_R3.World world = ((CraftWorld)player.getWorld()).getHandle();
+				TownyMob newMob = null;
 				if (split.length == 1) {
 					player.sendMessage(ChatColor.RED + "You must specify a mob");
 					return true;
@@ -239,7 +239,7 @@ public class FmCommand implements CommandExecutor {
 				}
 				
 				if (world.addEntity((Entity) newMob, SpawnReason.CUSTOM)) {
-					FactionMobs.mobList.add(newMob);
+					TownyMobs.mobList.add(newMob);
 					player.sendMessage(String.format("You have spawned a %s", newMob.getTypeName()));
 				} else {
 					newMob.die();
@@ -281,7 +281,7 @@ public class FmCommand implements CommandExecutor {
 				} else {
 					try {
 						int myColor = Integer.parseInt(split[1], 16);
-						FactionMobs.factionColors.put(playerfaction.getName(), myColor);
+						TownyMobs.factionColors.put(playerfaction.getName(), myColor);
 						player.sendMessage(String.format("Set your town color to %s", StringUtils.leftPad(Integer.toHexString(myColor), 6, "0")));
 						plugin.updateList();
 					} catch (NumberFormatException e) {
@@ -323,7 +323,7 @@ public class FmCommand implements CommandExecutor {
 						player.sendMessage(ChatColor.RED + "You must be in a town.");
 						return true;
 					}
-					List<FactionMob> selection = plugin.playerSelections.get(player.getName());
+					List<TownyMob> selection = plugin.playerSelections.get(player.getName());
 					for (int i = selection.size()-1; i >= 0; i--) {
 						if (!selection.get(i).isAlive()
 								|| !selection.get(i).getFactionName().equals(playerfaction.getName())) {
@@ -339,7 +339,7 @@ public class FmCommand implements CommandExecutor {
 				
 				if (split[1].equalsIgnoreCase("gohome") || split[1].equalsIgnoreCase("home")) {
 					plugin.mobLeader.remove(player.getName());
-					for (FactionMob fmob : plugin.playerSelections.get(player.getName())) {
+					for (TownyMob fmob : plugin.playerSelections.get(player.getName())) {
 						fmob.setOrder("home");
 						Location loc = fmob.getSpawn();
 						fmob.setPoi(loc.getX(), loc.getY(), loc.getZ());
@@ -350,7 +350,7 @@ public class FmCommand implements CommandExecutor {
 					plugin.mobLeader.put(player.getName(), true);
 					Location loc = player.getLocation();
 					int count = 0;
-					for (FactionMob fmob : plugin.playerSelections.get(player.getName())) {
+					for (TownyMob fmob : plugin.playerSelections.get(player.getName())) {
 						if (fmob.getSpawn().getWorld().getName().equals(loc.getWorld().getName())) {
 							double tmpX = (1.5-(count%4))*1.5;
 							double tmpZ = ((-1.) - Math.floor(count / 4.))*1.5;
@@ -365,7 +365,7 @@ public class FmCommand implements CommandExecutor {
 					return true;
 				} else if (split[1].equalsIgnoreCase("stop")) {
 					plugin.mobLeader.remove(player.getName());
-					for (FactionMob fmob : plugin.playerSelections.get(player.getName())) {
+					for (TownyMob fmob : plugin.playerSelections.get(player.getName())) {
 						fmob.setOrder("poi");
 					}
 					player.sendMessage(ChatColor.GREEN + "You told your mobs to stop");
@@ -384,7 +384,7 @@ public class FmCommand implements CommandExecutor {
 					Location loc = block.getLocation().add(0,1,0);
 					Location playerLoc = player.getLocation();
 					int count = 0;
-					for (FactionMob fmob : plugin.playerSelections.get(player.getName())) {
+					for (TownyMob fmob : plugin.playerSelections.get(player.getName())) {
 						if (fmob.getSpawn().getWorld().getName().equals(playerLoc.getWorld().getName())) {
 							double tmpX = (1.5-(count%4))*1.5;
 							double tmpZ = ((-1.) - Math.floor(count / 4.))*1.5;
@@ -400,7 +400,7 @@ public class FmCommand implements CommandExecutor {
 				} else if (split[1].equalsIgnoreCase("patrolHere") || split[1].equalsIgnoreCase("patrol")) {
 					plugin.mobLeader.remove(player.getName());
 					Location loc = player.getLocation();
-					for (FactionMob fmob : plugin.playerSelections.get(player.getName())) {
+					for (TownyMob fmob : plugin.playerSelections.get(player.getName())) {
 						if (fmob.getSpawn().getWorld().getName().equals(loc.getWorld().getName())) {
 							fmob.setOrder("ppoi");
 							fmob.setPoi(loc.getX(), loc.getY(), loc.getZ());
@@ -412,7 +412,7 @@ public class FmCommand implements CommandExecutor {
 					return true;
 				} else if (split[1].equalsIgnoreCase("wander")) {
 					plugin.mobLeader.remove(player.getName());
-					for (FactionMob fmob : plugin.playerSelections.get(player.getName())) {
+					for (TownyMob fmob : plugin.playerSelections.get(player.getName())) {
 						fmob.setOrder("wander");
 					}
 					player.sendMessage(ChatColor.GREEN + "Your mobs will now wander around");
@@ -420,7 +420,7 @@ public class FmCommand implements CommandExecutor {
 				} else if (split[1].equalsIgnoreCase("setHome")) {
 					plugin.mobLeader.put(player.getName(), true);
 					Location loc = player.getLocation();
-					for (FactionMob fmob : plugin.playerSelections.get(player.getName())) {
+					for (TownyMob fmob : plugin.playerSelections.get(player.getName())) {
 						if (fmob.getSpawn().getWorld().equals(loc.getWorld())) {
 							fmob.setOrder("home");
 							Location spawnLoc = fmob.getSpawn();
@@ -440,7 +440,7 @@ public class FmCommand implements CommandExecutor {
 						player.sendMessage(ChatColor.RED + "You do not have permission");
 						return true;
 					}
-					for (FactionMob fmob : plugin.playerSelections.get(player.getName())) {
+					for (TownyMob fmob : plugin.playerSelections.get(player.getName())) {
 						fmob.setOrder("home");
 						Location loc = fmob.getSpawn();
 						fmob.setPosition(loc.getX(), loc.getY(), loc.getZ());
@@ -456,7 +456,7 @@ public class FmCommand implements CommandExecutor {
 					}
 					Location loc = player.getLocation();
 					int count = 0;
-					for (FactionMob fmob : plugin.playerSelections.get(player.getName())) {
+					for (TownyMob fmob : plugin.playerSelections.get(player.getName())) {
 						if (fmob.getSpawn().getWorld().equals(loc.getWorld())) {
 							double tmpX = (1.5-(count%4))*1.5;
 							double tmpZ = ((-1.) - Math.floor(count / 4.))*1.5;
@@ -475,7 +475,7 @@ public class FmCommand implements CommandExecutor {
 					player.sendMessage("Your mobs are now with you");
 					return true;
 				} else if (split[1].equalsIgnoreCase("forgive")) {
-					for (FactionMob fmob : plugin.playerSelections.get(player.getName())) {
+					for (TownyMob fmob : plugin.playerSelections.get(player.getName())) {
 						fmob.clearAttackedBy();
 					}
 				} else {

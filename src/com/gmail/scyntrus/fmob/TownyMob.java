@@ -1,14 +1,14 @@
 package com.gmail.scyntrus.fmob;
 
-import net.minecraft.server.v1_6_R2.Entity;
-import net.minecraft.server.v1_6_R2.EntityLiving;
-import net.minecraft.server.v1_6_R2.ItemStack;
+import net.minecraft.server.v1_6_R3.Entity;
+import net.minecraft.server.v1_6_R3.EntityLiving;
+import net.minecraft.server.v1_6_R3.ItemStack;
 
 import org.bukkit.Location;
 
 import com.palmergames.bukkit.towny.object.Town;
 
-public interface FactionMob {
+public interface TownyMob {
 	public Town getFaction();
 	public Location getSpawn();
 	public void setPosition(double x, double y, double z);
