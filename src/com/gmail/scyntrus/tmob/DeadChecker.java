@@ -1,11 +1,11 @@
-package com.gmail.scyntrus.fmob;
+package com.gmail.scyntrus.tmob;
 
 public class DeadChecker implements Runnable {
 
 	TownyMobs plugin;
 	
-    public DeadChecker(TownyMobs factionMobs) {
-		this.plugin = factionMobs;
+    public DeadChecker(TownyMobs townyMobs) {
+		this.plugin = townyMobs;
 	}
 
 	public void run() {

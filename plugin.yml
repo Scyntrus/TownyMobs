@@ -1,52 +1,52 @@
 name: TownyMobs
-main: com.gmail.scyntrus.fmob.FactionMobs
+main: com.gmail.scyntrus.tmob.TownyMobs
 author: Scyntrus
 version: 2.6.2_T_1.6.4
 depend: [Towny]
 softdepend: [Vault]
 commands:
-    fm:
+    tm:
         description: Towny mobs control
-        usage: "/fm [spawn|order|color] [parameters]"
-        aliases: fmob
-    fmc:
+        usage: "/tm [spawn|order|color] [parameters]"
+        aliases: tmob
+    tmc:
         description: Spawn a mob to a specific town. Designed to be used by command blocks
-        usage: "/fmc MOBTYPE TOWNNAME WORLDNAME X Y Z [EXTRAINFO]"
+        usage: "/tmc MOBTYPE TOWNNAME WORLDNAME X Y Z [EXTRAINFO]"
 permissions:
-    fmob.spawn:
-        description: Allows you to use /fm spawn with all mobs
+    tmob.spawn:
+        description: Allows you to use /tm spawn with all mobs
         default: true
-    fmob.spawn.archer:
-        description: Allows you to use /fm spawn archer
+    tmob.spawn.archer:
+        description: Allows you to use /tm spawn archer
         default: false
-    fmob.spawn.mage:
-        description: Allows you to use /fm spawn mage
+    tmob.spawn.mage:
+        description: Allows you to use /tm spawn mage
         default: false
-    fmob.spawn.swordsman:
-        description: Allows you to use /fm spawn swordsman
+    tmob.spawn.swordsman:
+        description: Allows you to use /tm spawn swordsman
         default: false
-    fmob.spawn.titan:
-        description: Allows you to use /fm spawn titan
+    tmob.spawn.titan:
+        description: Allows you to use /tm spawn titan
         default: false
-    fmob.color:
-        description: Allows you to use /fm color
+    tmob.color:
+        description: Allows you to use /tm color
         default: true
-    fmob.order:
-        description: Allows you to use /fm order
+    tmob.order:
+        description: Allows you to use /tm order
         default: true
-    fmob.order.move:
-        description: Allows you to use /fm order moveToPoint
+    tmob.order.move:
+        description: Allows you to use /tm order moveToPoint
         default: true
-    fmob.order.tp:
-        description: Allows you to use /fm order [tpSpawn|tpHere]
+    tmob.order.tp:
+        description: Allows you to use /tm order [tpSpawn|tpHere]
         default: op
-    fmob.bypass:
+    tmob.bypass:
         description: Allows you to spawn mobs without restriction
         default: false
-    fmob.fmc:
-        description: Allows you to use /fmc, a command designed for command blocks
+    tmob.fmc:
+        description: Allows you to use /tmc, a command designed for command blocks
         default: false
-    fmob.selectall:
-        description: Allows you to use /fm selectall
+    tmob.selectall:
+        description: Allows you to use /tm selectall
         default: op
     

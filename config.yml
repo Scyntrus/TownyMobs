@@ -12,14 +12,14 @@ spawnLimit: 60
 attackMobs: true
 
 # Since vanilla zombies don't attack back, this will decide
-# whether or not faction mobs will attack zombies.
+# whether or not towny mobs will attack zombies.
 # Only works when attackMobs is enabled.
 attackZombies: true
 
 # Prevent mobs from damaging friendly players and mobs
 noFriendlyFire: true
 
-# Attacking a town resident or towny mob will agro their nearby faction mobs
+# Attacking a town resident or towny mob will agro their nearby towny mobs
 alertAllies: true
 
 # Enabling this option will allow players to heal their mobs for a set amount of health
@@ -43,8 +43,8 @@ mobPatrolSpeed: .175
 # Set the distance the mobs will attempt to pathfind (Recommend between 16 and 64, default 64)
 mobNavRange: 64
 
-# Enables the use of /fmc, a command designed to be used by command blocks
-fmcEnabled: true
+# Enables the use of /tmc, a command designed to be used by command blocks
+tmcEnabled: true
 
 # Excludes towny mobs from kill commands such as /killall (experimental)
 # Set this to false if runKeepAliveTask is enabled

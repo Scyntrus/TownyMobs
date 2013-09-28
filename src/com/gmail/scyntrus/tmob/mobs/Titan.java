@@ -1,4 +1,4 @@
-package com.gmail.scyntrus.fmob.mobs;
+package com.gmail.scyntrus.tmob.mobs;
 
 import java.lang.reflect.Field;
 
@@ -6,21 +6,20 @@ import net.minecraft.server.v1_6_R3.AttributeInstance;
 import net.minecraft.server.v1_6_R3.DamageSource;
 import net.minecraft.server.v1_6_R3.Entity;
 import net.minecraft.server.v1_6_R3.EntityHuman;
+import net.minecraft.server.v1_6_R3.EntityIronGolem;
 import net.minecraft.server.v1_6_R3.EntityLiving;
 import net.minecraft.server.v1_6_R3.EntityPlayer;
 import net.minecraft.server.v1_6_R3.EntityProjectile;
-import net.minecraft.server.v1_6_R3.EntitySkeleton;
 import net.minecraft.server.v1_6_R3.EnumMonsterType;
 import net.minecraft.server.v1_6_R3.GenericAttributes;
-import net.minecraft.server.v1_6_R3.Item;
-import net.minecraft.server.v1_6_R3.ItemStack;
 import net.minecraft.server.v1_6_R3.MathHelper;
 import net.minecraft.server.v1_6_R3.NBTTagCompound;
 import net.minecraft.server.v1_6_R3.Navigation;
 import net.minecraft.server.v1_6_R3.PathfinderGoal;
-import net.minecraft.server.v1_6_R3.PathfinderGoalArrowAttack;
 import net.minecraft.server.v1_6_R3.PathfinderGoalFloat;
 import net.minecraft.server.v1_6_R3.PathfinderGoalLookAtPlayer;
+import net.minecraft.server.v1_6_R3.PathfinderGoalMeleeAttack;
+import net.minecraft.server.v1_6_R3.PathfinderGoalMoveTowardsTarget;
 import net.minecraft.server.v1_6_R3.PathfinderGoalRandomLookaround;
 import net.minecraft.server.v1_6_R3.PathfinderGoalRandomStroll;
 import net.minecraft.server.v1_6_R3.PathfinderGoalSelector;
@@ -34,24 +33,24 @@ import org.bukkit.craftbukkit.v1_6_R3.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_6_R3.util.UnsafeList;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import com.gmail.scyntrus.fmob.TownyMob;
-import com.gmail.scyntrus.fmob.TownyMobs;
-import com.gmail.scyntrus.fmob.Utils;
+import com.gmail.scyntrus.tmob.TownyMob;
+import com.gmail.scyntrus.tmob.TownyMobs;
+import com.gmail.scyntrus.tmob.Utils;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 
-public class Archer extends EntitySkeleton implements TownyMob {
+public class Titan extends EntityIronGolem implements TownyMob {
 	
 	public Location spawnLoc = null;
-	public Town faction = null;
-	public String factionName = "";
+	public Town town = null;
+	public String townName = "";
 	public Entity attackedBy = null;
-	public static String typeName = "Archer";
-	public static float maxHp = 20;
+	public static String typeName = "Titan";
+	public static float maxHp = 40;
 	public static Boolean enabled = true;
 	public static double powerCost = 0;
-	public static double moneyCost = 0;
+	public static double moneyCost = 1;
 	public static double range = 16;
 	public static int damage = 0;
 	public static int drops = 0;
@@ -61,18 +60,17 @@ public class Archer extends EntitySkeleton implements TownyMob {
 	public double poiX=0, poiY=0, poiZ=0;
 	public String order = "poi";
 	
-	public Archer(World world) {
+	public Titan(World world) {
 		super(world);
 		this.die();
 	}
 	
-	public Archer(Location spawnLoc, Town faction2) {
+	public Titan(Location spawnLoc, Town town2) {
 		super(((CraftWorld) spawnLoc.getWorld()).getHandle());
 		this.setSpawn(spawnLoc);
-		this.setFaction(faction2);
-		Utils.giveColorArmor(this);
-		if (TownyMobs.displayMobFaction) {
-			this.setCustomName(ChatColor.YELLOW + this.factionName + " " + typeName);
+		this.setTown(town2);
+		if (TownyMobs.displayMobTown) {
+			this.setCustomName(ChatColor.YELLOW + this.townName + " " + typeName);
 			this.setCustomNameVisible(true);
 		}
 	    this.persistent = true;
@@ -81,14 +79,14 @@ public class Archer extends EntitySkeleton implements TownyMob {
 	    this.moveSpeed = TownyMobs.mobSpeed;
 	    getAttributeInstance(GenericAttributes.d).setValue(1.0);
 	    getAttributeInstance(GenericAttributes.a).setValue(maxHp);
-	    if (damage > 0) getAttributeInstance(GenericAttributes.e).setValue(damage);
 	    this.setHealth(maxHp);
-	    this.Y = 1.5F;                  // jump height
-	    this.getNavigation().a(false);  // avoid water
-	    this.getNavigation().b(false);  // break door
-	    this.getNavigation().c(true);   // enter open door
-	    this.getNavigation().d(false);  // avoid sunlight
-	    this.getNavigation().e(true);   // swim
+	    this.Y = 1.5F;
+	    this.getNavigation().a(false);
+	    this.getNavigation().b(false);
+	    this.getNavigation().c(true);
+	    this.getNavigation().d(false);
+	    this.getNavigation().e(true);
+	    this.setHealth(maxHp);
 	    try {
 			Field field = Navigation.class.getDeclaredField("e"); //TODO: Update name on version change
 			field.setAccessible(true);
@@ -96,7 +94,6 @@ public class Archer extends EntitySkeleton implements TownyMob {
 			e.setValue(TownyMobs.mobNavRange);
 		} catch (Exception e) {
 		}
-	    this.setEquipment(0, new ItemStack(Item.BOW));
 	    try {
 	    	 
 	    	Field gsa = PathfinderGoalSelector.class.getDeclaredField("a");
@@ -106,21 +103,19 @@ public class Archer extends EntitySkeleton implements TownyMob {
 	    } catch (Exception e) {
 	    }
 	    this.goalSelector.a(1, new PathfinderGoalFloat(this));
-	    this.goalSelector.a(2, new PathfinderGoalArrowAttack(this, this.moveSpeed, 60, 10.0F));
-	    this.goalSelector.a(2, new PathfinderGoalRandomStroll(this, this.moveSpeed));
-	    this.goalSelector.a(3, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
-	    this.goalSelector.a(3, new PathfinderGoalRandomLookaround(this));
-	    this.getBukkitEntity().setMetadata("NPC", new FixedMetadataValue(TownyMobs.instance, true));
+	    this.goalSelector.a(2, new PathfinderGoalMeleeAttack(this, this.moveSpeed, true));
+	    this.goalSelector.a(3, new PathfinderGoalMoveTowardsTarget(this, this.moveSpeed, (float) range));
+	    this.goalSelector.a(4, new PathfinderGoalRandomStroll(this, this.moveSpeed));
+	    this.goalSelector.a(5, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
+	    this.goalSelector.a(5, new PathfinderGoalRandomLookaround(this));
 	    this.getBukkitEntity().setMetadata("CustomEntity", new FixedMetadataValue(TownyMobs.instance, true));
 	}
-	
+
 	@Override
-	public void c() { //TODO: Update name on version change
-		int tmpFire = this.fireTicks;
+	public void c() {
 		super.c();
-		this.fireTicks = tmpFire;
-		if (this.getEquipment(4) != null) {
-			this.getEquipment(4).setData(0);
+		if (this.inWater) {
+			this.motY += .1;
 		}
 		if (--retargetTime < 0) {
 			retargetTime = 20;
@@ -146,19 +141,19 @@ public class Archer extends EntitySkeleton implements TownyMob {
 					return;
 				} else if (this.order.equals("phome")) {
 					this.getNavigation().a(this.spawnLoc.getX(), this.spawnLoc.getY(), this.spawnLoc.getZ(), TownyMobs.mobPatrolSpeed);
-					if (Utils.dist3D(this.locX,this.spawnLoc.getX(),this.locY,this.spawnLoc.getY(),this.locZ,this.spawnLoc.getZ()) < 1) {
+					if (Utils.dist3D(this.locX,this.spawnLoc.getX(),this.locY,this.spawnLoc.getY(),this.locZ,this.spawnLoc.getZ()) < 2) {
 						this.order = "ppoi";
 					}
 					return;
 				} else if (this.order.equals("ppoi")) {
 					this.getNavigation().a(poiX, poiY, poiZ, TownyMobs.mobPatrolSpeed);
-					if (Utils.dist3D(this.locX,this.poiX,this.locY,this.poiY,this.locZ,this.poiZ) < 1) {
+					if (Utils.dist3D(this.locX,this.poiX,this.locY,this.poiY,this.locZ,this.poiZ) < 2.5) {
 						this.order = "phome";
 					}
 					return;
 				} else if (this.order.equals("path")) {
 					this.getNavigation().a(poiX, poiY, poiZ, TownyMobs.mobPatrolSpeed);
-					if (Utils.dist3D(this.locX,this.poiX,this.locY,this.poiY,this.locZ,this.poiZ) < 1) {
+					if (Utils.dist3D(this.locX,this.poiX,this.locY,this.poiY,this.locZ,this.poiZ) < 2.5) {
 						this.order = "home";
 					}
 					return;
@@ -167,7 +162,7 @@ public class Archer extends EntitySkeleton implements TownyMob {
 		}
 		return;
 	}
-
+	
 	private void setSpawn(Location loc) {
 		spawnLoc = new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ());
 		this.setPosition(loc.getX(), loc.getY(), loc.getZ());
@@ -179,7 +174,7 @@ public class Archer extends EntitySkeleton implements TownyMob {
 		if (this.attackedBy != null) {
 			if (this.attackedBy.isAlive() 
 					&& this.attackedBy.world.getWorldData().getName().equals(this.world.getWorldData().getName())
-					&& Utils.FactionCheck(this.attackedBy, this.faction) < 1) {
+					&& Utils.TownCheck(this.attackedBy, this.town) < 1) {
 				double dist = Utils.dist3D(this.locX, this.attackedBy.locX, this.locY, this.attackedBy.locY, this.locZ, this.attackedBy.locZ);
 				if (dist < 16) {
 					this.setTarget(this.attackedBy);
@@ -194,7 +189,7 @@ public class Archer extends EntitySkeleton implements TownyMob {
 		Location thisLoc;
 		double thisDist;
 		for (org.bukkit.entity.Entity e : this.getBukkitEntity().getNearbyEntities(1.5, 1.5, 1.5)) {
-			if (!e.isDead() && e instanceof CraftLivingEntity && Utils.FactionCheck(((CraftEntity) e).getHandle(), faction) == -1) {
+			if (!e.isDead() && e instanceof CraftLivingEntity && Utils.TownCheck(((CraftEntity) e).getHandle(), town) == -1) {
 				thisLoc = e.getLocation();
 				thisDist = Math.sqrt(Math.pow(this.locX-thisLoc.getX(),2) + Math.pow(this.locY-thisLoc.getY(),2) + Math.pow(this.locZ-thisLoc.getZ(),2));
 				if (thisDist < 1.5) {
@@ -218,7 +213,7 @@ public class Archer extends EntitySkeleton implements TownyMob {
 		Location thisLoc;
 		double thisDist;
 		for (org.bukkit.entity.Entity e : this.getBukkitEntity().getNearbyEntities(range, range, range)) {
-			if (!e.isDead() && e instanceof CraftLivingEntity && Utils.FactionCheck(((CraftEntity) e).getHandle(), faction) == -1) {
+			if (!e.isDead() && e instanceof CraftLivingEntity && Utils.TownCheck(((CraftEntity) e).getHandle(), town) == -1) {
 				thisLoc = e.getLocation();
 				thisDist = Math.sqrt(Math.pow(this.locX-thisLoc.getX(),2) + Math.pow(this.locY-thisLoc.getY(),2) + Math.pow(this.locZ-thisLoc.getZ(),2));
 				if (thisDist < dist) {
@@ -237,7 +232,7 @@ public class Archer extends EntitySkeleton implements TownyMob {
 	public boolean damageEntity(DamageSource damagesource, float i) {
 		boolean out = super.damageEntity(damagesource, i);
 		if (out) {
-			switch (Utils.FactionCheck(damagesource.getEntity(), this.faction)) {
+			switch (Utils.TownCheck(damagesource.getEntity(), this.town)) {
 			case 1:
 				this.findTarget();
 				if (damagesource.getEntity() instanceof EntityPlayer) {
@@ -268,31 +263,31 @@ public class Archer extends EntitySkeleton implements TownyMob {
 	}
 
 	@Override
-	public Town getFaction() {
-		if (this.faction == null) {
+	public Town getTown() {
+		if (this.town == null) {
 			try {
-				this.faction = TownyUniverse.getDataSource().getTown(this.factionName);
+				this.town = TownyUniverse.getDataSource().getTown(this.townName);
 			} catch (NotRegisteredException e) {
 				this.die();
 			}
 		}
-		if (this.faction == null) {
+		if (this.town == null) {
 			this.die();
-			System.out.println("[Error] Found and removed factionless faction mob");
+			System.out.println("[Error] Found and removed townless town mob");
 		}
-		return this.faction;
+		return this.town;
 	}
 
-	private void setFaction(Town faction) {
-		this.faction = faction;
-		if (faction == null) die();
-		this.factionName = new String(faction.getName());
+	private void setTown(Town town) {
+		this.town = town;
+		if (town == null) die();
+		this.townName = new String(town.getName());
 	}
 	
 	@Override
 	public void setTarget(Entity entity) {
 		this.target = entity;
-		if (entity instanceof EntityLiving && entity.isAlive()) {
+		if (entity instanceof EntityLiving) {
 			this.setGoalTarget((EntityLiving) entity);
 		} else if (entity == null) {
 			this.setGoalTarget(null);
@@ -319,15 +314,14 @@ public class Archer extends EntitySkeleton implements TownyMob {
 			this.findTarget();
 		}
 		try {
-			this.faction = TownyUniverse.getDataSource().getTown(this.factionName);
+			this.town = TownyUniverse.getDataSource().getTown(this.townName);
 		} catch (NotRegisteredException e) {
 			this.die();
 		}
-		if (this.faction == null) {
+		if (this.town == null) {
 			this.die();
 			return;
 		}
-		Utils.giveColorArmor(this);
 	}
 
 	@Override
@@ -353,26 +347,6 @@ public class Archer extends EntitySkeleton implements TownyMob {
 	@Override
 	public double getlocZ() {
 		return this.locZ;
-	}	
-
-	@Override
-	protected String r() { //TODO: Update name on version change
-	    return TownyMobs.sndBreath;
-	}
-
-	@Override
-	protected String aO() { //TODO: Update name on version change
-	    return TownyMobs.sndHurt;
-	}
-
-	@Override
-	protected String aP() { //TODO: Update name on version change
-	    return TownyMobs.sndDeath;
-	}
-
-	@Override
-	protected void a(int i, int j, int k, int l) { //TODO: Update name on version change
-	    makeSound(TownyMobs.sndStep, 0.15F, 1.0F);
 	}
 
 	@Override
@@ -433,9 +407,9 @@ public class Archer extends EntitySkeleton implements TownyMob {
 	}
 	
 	@Override
-	public String getFactionName() {
-		if (this.factionName == null) this.factionName = "";
-		return this.factionName;
+	public String getTownName() {
+		if (this.townName == null) this.townName = "";
+		return this.townName;
 	}
 	
 	@Override
@@ -453,21 +427,27 @@ public class Archer extends EntitySkeleton implements TownyMob {
 	}
 	
 	@Override
-	public void a(EntityLiving entityliving, float f) { //TODO: Update name on version change
+	public boolean m(Entity entity) {
 		if (damage>0) {
-			super.a(entityliving, damage/2F);
+			this.world.broadcastEntityEffect(this, (byte)4);
+			boolean flag = entity.damageEntity(DamageSource.mobAttack(this), damage);
+			if (flag) {
+				entity.motY += 0.4;
+			}
+			makeSound("mob.irongolem.throw", 1.0F, 1.0F);
+			return flag;
 		} else {
-			super.a(entityliving, f);
+			return super.m(entity);
 		}
 	}
 
 	@Override
-	public boolean c(NBTTagCompound nbttagcompound) { //TODO: Update name on version change
+	public boolean c(NBTTagCompound nbttagcompound) {
 		return false;
 	}
 
 	@Override
-	public boolean d(NBTTagCompound nbttagcompound) { //TODO: Update name on version change
+	public boolean d(NBTTagCompound nbttagcompound) {
 		return false;
 	}
 	
@@ -485,7 +465,7 @@ public class Archer extends EntitySkeleton implements TownyMob {
 	}
 	
 	@Override
-	public EnumMonsterType getMonsterType() { // Not undead
+	public EnumMonsterType getMonsterType() {
 		return EnumMonsterType.UNDEFINED;
 	}
 

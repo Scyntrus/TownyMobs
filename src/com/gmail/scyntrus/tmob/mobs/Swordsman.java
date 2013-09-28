@@ -1,4 +1,4 @@
-package com.gmail.scyntrus.fmob.mobs;
+package com.gmail.scyntrus.tmob.mobs;
 
 import java.lang.reflect.Field;
 
@@ -6,12 +6,14 @@ import net.minecraft.server.v1_6_R3.AttributeInstance;
 import net.minecraft.server.v1_6_R3.DamageSource;
 import net.minecraft.server.v1_6_R3.Entity;
 import net.minecraft.server.v1_6_R3.EntityHuman;
-import net.minecraft.server.v1_6_R3.EntityIronGolem;
 import net.minecraft.server.v1_6_R3.EntityLiving;
 import net.minecraft.server.v1_6_R3.EntityPlayer;
 import net.minecraft.server.v1_6_R3.EntityProjectile;
+import net.minecraft.server.v1_6_R3.EntitySkeleton;
 import net.minecraft.server.v1_6_R3.EnumMonsterType;
 import net.minecraft.server.v1_6_R3.GenericAttributes;
+import net.minecraft.server.v1_6_R3.Item;
+import net.minecraft.server.v1_6_R3.ItemStack;
 import net.minecraft.server.v1_6_R3.MathHelper;
 import net.minecraft.server.v1_6_R3.NBTTagCompound;
 import net.minecraft.server.v1_6_R3.Navigation;
@@ -33,24 +35,24 @@ import org.bukkit.craftbukkit.v1_6_R3.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_6_R3.util.UnsafeList;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import com.gmail.scyntrus.fmob.TownyMob;
-import com.gmail.scyntrus.fmob.TownyMobs;
-import com.gmail.scyntrus.fmob.Utils;
+import com.gmail.scyntrus.tmob.TownyMob;
+import com.gmail.scyntrus.tmob.TownyMobs;
+import com.gmail.scyntrus.tmob.Utils;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 
-public class Titan extends EntityIronGolem implements TownyMob {
+public class Swordsman extends EntitySkeleton implements TownyMob {
 	
 	public Location spawnLoc = null;
-	public Town faction = null;
-	public String factionName = "";
+	public Town town = null;
+	public String townName = "";
 	public Entity attackedBy = null;
-	public static String typeName = "Titan";
-	public static float maxHp = 40;
+	public static String typeName = "Swordsman";
+	public static float maxHp = 20;
 	public static Boolean enabled = true;
 	public static double powerCost = 0;
-	public static double moneyCost = 1;
+	public static double moneyCost = 0;
 	public static double range = 16;
 	public static int damage = 0;
 	public static int drops = 0;
@@ -60,17 +62,18 @@ public class Titan extends EntityIronGolem implements TownyMob {
 	public double poiX=0, poiY=0, poiZ=0;
 	public String order = "poi";
 	
-	public Titan(World world) {
+	public Swordsman(World world) {
 		super(world);
 		this.die();
 	}
 	
-	public Titan(Location spawnLoc, Town faction2) {
+	public Swordsman(Location spawnLoc, Town town2) {
 		super(((CraftWorld) spawnLoc.getWorld()).getHandle());
 		this.setSpawn(spawnLoc);
-		this.setFaction(faction2);
-		if (TownyMobs.displayMobFaction) {
-			this.setCustomName(ChatColor.YELLOW + this.factionName + " " + typeName);
+		this.setTown(town2);
+		Utils.giveColorArmor(this);
+		if (TownyMobs.displayMobTown) {
+			this.setCustomName(ChatColor.YELLOW + this.townName + " " + typeName);
 			this.setCustomNameVisible(true);
 		}
 	    this.persistent = true;
@@ -79,6 +82,7 @@ public class Titan extends EntityIronGolem implements TownyMob {
 	    this.moveSpeed = TownyMobs.mobSpeed;
 	    getAttributeInstance(GenericAttributes.d).setValue(1.0);
 	    getAttributeInstance(GenericAttributes.a).setValue(maxHp);
+	    if (damage > 0) getAttributeInstance(GenericAttributes.e).setValue(damage);
 	    this.setHealth(maxHp);
 	    this.Y = 1.5F;
 	    this.getNavigation().a(false);
@@ -86,7 +90,6 @@ public class Titan extends EntityIronGolem implements TownyMob {
 	    this.getNavigation().c(true);
 	    this.getNavigation().d(false);
 	    this.getNavigation().e(true);
-	    this.setHealth(maxHp);
 	    try {
 			Field field = Navigation.class.getDeclaredField("e"); //TODO: Update name on version change
 			field.setAccessible(true);
@@ -94,6 +97,7 @@ public class Titan extends EntityIronGolem implements TownyMob {
 			e.setValue(TownyMobs.mobNavRange);
 		} catch (Exception e) {
 		}
+	    this.setEquipment(0, new ItemStack(Item.IRON_SWORD));
 	    try {
 	    	 
 	    	Field gsa = PathfinderGoalSelector.class.getDeclaredField("a");
@@ -108,15 +112,16 @@ public class Titan extends EntityIronGolem implements TownyMob {
 	    this.goalSelector.a(4, new PathfinderGoalRandomStroll(this, this.moveSpeed));
 	    this.goalSelector.a(5, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
 	    this.goalSelector.a(5, new PathfinderGoalRandomLookaround(this));
-	    this.getBukkitEntity().setMetadata("NPC", new FixedMetadataValue(TownyMobs.instance, true));
 	    this.getBukkitEntity().setMetadata("CustomEntity", new FixedMetadataValue(TownyMobs.instance, true));
 	}
 
 	@Override
 	public void c() {
+		int tmpFire = this.fireTicks;
 		super.c();
-		if (this.inWater) {
-			this.motY += .1;
+		this.fireTicks = tmpFire;
+		if (this.getEquipment(4) != null) {
+			this.getEquipment(4).setData(0);
 		}
 		if (--retargetTime < 0) {
 			retargetTime = 20;
@@ -142,19 +147,19 @@ public class Titan extends EntityIronGolem implements TownyMob {
 					return;
 				} else if (this.order.equals("phome")) {
 					this.getNavigation().a(this.spawnLoc.getX(), this.spawnLoc.getY(), this.spawnLoc.getZ(), TownyMobs.mobPatrolSpeed);
-					if (Utils.dist3D(this.locX,this.spawnLoc.getX(),this.locY,this.spawnLoc.getY(),this.locZ,this.spawnLoc.getZ()) < 2) {
+					if (Utils.dist3D(this.locX,this.spawnLoc.getX(),this.locY,this.spawnLoc.getY(),this.locZ,this.spawnLoc.getZ()) < 1) {
 						this.order = "ppoi";
 					}
 					return;
 				} else if (this.order.equals("ppoi")) {
 					this.getNavigation().a(poiX, poiY, poiZ, TownyMobs.mobPatrolSpeed);
-					if (Utils.dist3D(this.locX,this.poiX,this.locY,this.poiY,this.locZ,this.poiZ) < 2.5) {
+					if (Utils.dist3D(this.locX,this.poiX,this.locY,this.poiY,this.locZ,this.poiZ) < 1) {
 						this.order = "phome";
 					}
 					return;
 				} else if (this.order.equals("path")) {
 					this.getNavigation().a(poiX, poiY, poiZ, TownyMobs.mobPatrolSpeed);
-					if (Utils.dist3D(this.locX,this.poiX,this.locY,this.poiY,this.locZ,this.poiZ) < 2.5) {
+					if (Utils.dist3D(this.locX,this.poiX,this.locY,this.poiY,this.locZ,this.poiZ) < 1) {
 						this.order = "home";
 					}
 					return;
@@ -175,7 +180,7 @@ public class Titan extends EntityIronGolem implements TownyMob {
 		if (this.attackedBy != null) {
 			if (this.attackedBy.isAlive() 
 					&& this.attackedBy.world.getWorldData().getName().equals(this.world.getWorldData().getName())
-					&& Utils.FactionCheck(this.attackedBy, this.faction) < 1) {
+					&& Utils.TownCheck(this.attackedBy, this.town) < 1) {
 				double dist = Utils.dist3D(this.locX, this.attackedBy.locX, this.locY, this.attackedBy.locY, this.locZ, this.attackedBy.locZ);
 				if (dist < 16) {
 					this.setTarget(this.attackedBy);
@@ -190,7 +195,7 @@ public class Titan extends EntityIronGolem implements TownyMob {
 		Location thisLoc;
 		double thisDist;
 		for (org.bukkit.entity.Entity e : this.getBukkitEntity().getNearbyEntities(1.5, 1.5, 1.5)) {
-			if (!e.isDead() && e instanceof CraftLivingEntity && Utils.FactionCheck(((CraftEntity) e).getHandle(), faction) == -1) {
+			if (!e.isDead() && e instanceof CraftLivingEntity && Utils.TownCheck(((CraftEntity) e).getHandle(), town) == -1) {
 				thisLoc = e.getLocation();
 				thisDist = Math.sqrt(Math.pow(this.locX-thisLoc.getX(),2) + Math.pow(this.locY-thisLoc.getY(),2) + Math.pow(this.locZ-thisLoc.getZ(),2));
 				if (thisDist < 1.5) {
@@ -214,7 +219,7 @@ public class Titan extends EntityIronGolem implements TownyMob {
 		Location thisLoc;
 		double thisDist;
 		for (org.bukkit.entity.Entity e : this.getBukkitEntity().getNearbyEntities(range, range, range)) {
-			if (!e.isDead() && e instanceof CraftLivingEntity && Utils.FactionCheck(((CraftEntity) e).getHandle(), faction) == -1) {
+			if (!e.isDead() && e instanceof CraftLivingEntity && Utils.TownCheck(((CraftEntity) e).getHandle(), town) == -1) {
 				thisLoc = e.getLocation();
 				thisDist = Math.sqrt(Math.pow(this.locX-thisLoc.getX(),2) + Math.pow(this.locY-thisLoc.getY(),2) + Math.pow(this.locZ-thisLoc.getZ(),2));
 				if (thisDist < dist) {
@@ -233,7 +238,7 @@ public class Titan extends EntityIronGolem implements TownyMob {
 	public boolean damageEntity(DamageSource damagesource, float i) {
 		boolean out = super.damageEntity(damagesource, i);
 		if (out) {
-			switch (Utils.FactionCheck(damagesource.getEntity(), this.faction)) {
+			switch (Utils.TownCheck(damagesource.getEntity(), this.town)) {
 			case 1:
 				this.findTarget();
 				if (damagesource.getEntity() instanceof EntityPlayer) {
@@ -264,25 +269,25 @@ public class Titan extends EntityIronGolem implements TownyMob {
 	}
 
 	@Override
-	public Town getFaction() {
-		if (this.faction == null) {
+	public Town getTown() {
+		if (this.town == null) {
 			try {
-				this.faction = TownyUniverse.getDataSource().getTown(this.factionName);
+				this.town = TownyUniverse.getDataSource().getTown(this.townName);
 			} catch (NotRegisteredException e) {
 				this.die();
 			}
 		}
-		if (this.faction == null) {
+		if (this.town == null) {
 			this.die();
-			System.out.println("[Error] Found and removed factionless faction mob");
+			System.out.println("[Error] Found and removed townless town mob");
 		}
-		return this.faction;
+		return this.town;
 	}
 
-	private void setFaction(Town faction) {
-		this.faction = faction;
-		if (faction == null) die();
-		this.factionName = new String(faction.getName());
+	private void setTown(Town town) {
+		this.town = town;
+		if (town == null) die();
+		this.townName = new String(town.getName());
 	}
 	
 	@Override
@@ -315,14 +320,15 @@ public class Titan extends EntityIronGolem implements TownyMob {
 			this.findTarget();
 		}
 		try {
-			this.faction = TownyUniverse.getDataSource().getTown(this.factionName);
+			this.town = TownyUniverse.getDataSource().getTown(this.townName);
 		} catch (NotRegisteredException e) {
 			this.die();
 		}
-		if (this.faction == null) {
+		if (this.town == null) {
 			this.die();
 			return;
 		}
+		Utils.giveColorArmor(this);
 	}
 
 	@Override
@@ -348,6 +354,26 @@ public class Titan extends EntityIronGolem implements TownyMob {
 	@Override
 	public double getlocZ() {
 		return this.locZ;
+	}
+
+	@Override
+	protected String r() {
+	    return TownyMobs.sndBreath;
+	}
+
+	@Override
+	protected String aO() {
+	    return TownyMobs.sndHurt;
+	}
+
+	@Override
+	protected String aP() {
+	    return TownyMobs.sndDeath;
+	}
+
+	@Override
+	protected void a(int i, int j, int k, int l) {
+	    makeSound(TownyMobs.sndStep, 0.15F, 1.0F);
 	}
 
 	@Override
@@ -408,9 +434,9 @@ public class Titan extends EntityIronGolem implements TownyMob {
 	}
 	
 	@Override
-	public String getFactionName() {
-		if (this.factionName == null) this.factionName = "";
-		return this.factionName;
+	public String getTownName() {
+		if (this.townName == null) this.townName = "";
+		return this.townName;
 	}
 	
 	@Override
@@ -424,21 +450,6 @@ public class Titan extends EntityIronGolem implements TownyMob {
 		this.setEquipment(4, null);
 		if (TownyMobs.mobList.contains(this)) {
 			TownyMobs.mobList.remove(this);
-		}
-	}
-	
-	@Override
-	public boolean m(Entity entity) {
-		if (damage>0) {
-			this.world.broadcastEntityEffect(this, (byte)4);
-			boolean flag = entity.damageEntity(DamageSource.mobAttack(this), damage);
-			if (flag) {
-				entity.motY += 0.4;
-			}
-			makeSound("mob.irongolem.throw", 1.0F, 1.0F);
-			return flag;
-		} else {
-			return super.m(entity);
 		}
 	}
 
@@ -463,6 +474,11 @@ public class Titan extends EntityIronGolem implements TownyMob {
 			this.setTarget(null);
 		}
 		this.attackedBy = null;
+	}
+	
+	@Override
+	public boolean bD() {
+		return false;
 	}
 	
 	@Override

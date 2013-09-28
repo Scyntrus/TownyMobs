@@ -1,4 +1,4 @@
-package com.gmail.scyntrus.fmob;
+package com.gmail.scyntrus.tmob;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,19 +17,19 @@ import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 
-import com.gmail.scyntrus.fmob.mobs.Archer;
-import com.gmail.scyntrus.fmob.mobs.Mage;
-import com.gmail.scyntrus.fmob.mobs.Swordsman;
-import com.gmail.scyntrus.fmob.mobs.Titan;
+import com.gmail.scyntrus.tmob.mobs.Archer;
+import com.gmail.scyntrus.tmob.mobs.Mage;
+import com.gmail.scyntrus.tmob.mobs.Swordsman;
+import com.gmail.scyntrus.tmob.mobs.Titan;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 
-public class FmCommand implements CommandExecutor {
+public class TmCommand implements CommandExecutor {
 
 	TownyMobs plugin;
 	
-	public FmCommand(TownyMobs plugin) {
+	public TmCommand(TownyMobs plugin) {
 		this.plugin = plugin;
 	}
 	
@@ -55,7 +55,7 @@ public class FmCommand implements CommandExecutor {
 					player.sendMessage(ChatColor.GREEN + "You have permission to spawn towny mobs");
 				}
 				if (!player.hasPermission("fmob.order")) {
-					player.sendMessage(ChatColor.RED + "You do not have permission to order faction mobs.");
+					player.sendMessage(ChatColor.RED + "You do not have permission to order town mobs.");
 				} else {
 					player.sendMessage(ChatColor.GREEN + "You have permission to order towny mobs");
 				}
@@ -108,7 +108,7 @@ public class FmCommand implements CommandExecutor {
 				try {
 					Resident fplayer = TownyUniverse.getDataSource().getResident(player.getName());
 					for (TownyMob fmob : TownyMobs.mobList) {
-						if (fmob.getFaction().getName().equals(fplayer.getTown().getName())) {
+						if (fmob.getTown().getName().equals(fplayer.getTown().getName())) {
 							plugin.playerSelections.get(player.getName()).add(fmob);
 						}
 					}
@@ -140,21 +140,21 @@ public class FmCommand implements CommandExecutor {
 				}
 				Location loc = player.getLocation();
 				Resident fplayer = null;
-				Town playerfaction = null;
+				Town playertown = null;
 				try {
 					fplayer = TownyUniverse.getDataSource().getResident(player.getName());
-					playerfaction = fplayer.getTown();
+					playertown = fplayer.getTown();
 				} catch (Exception ex) {
 					player.sendMessage(ChatColor.RED + "You must be in a town.");
 					return true;
 				}
-				if (playerfaction == null) {
+				if (playertown == null) {
 					player.sendMessage(ChatColor.RED + "You must be in a town.");
 					return true;
 				}
 				if (!player.hasPermission("fmob.bypass")) {
-					String areafaction = TownyUniverse.getTownName(loc);
-					if (!playerfaction.getName().equals(areafaction)) {
+					String areatown = TownyUniverse.getTownName(loc);
+					if (!playertown.getName().equals(areatown)) {
 						player.sendMessage(ChatColor.RED + "You may only spawn mobs in your town");
 						return true;
 					}
@@ -162,9 +162,9 @@ public class FmCommand implements CommandExecutor {
 						player.sendMessage(ChatColor.RED + "There are too many towny mobs");
 						return true;
 					}
-					if (TownyMobs.mobsPerFaction > 0) {
-						if (Utils.countMobsInFaction(playerfaction) >= TownyMobs.mobsPerFaction) {
-							player.sendMessage(ChatColor.RED + "Your faction has too many towny mobs.");
+					if (TownyMobs.mobsPerTown > 0) {
+						if (Utils.countMobsInTown(playertown) >= TownyMobs.mobsPerTown) {
+							player.sendMessage(ChatColor.RED + "Your town has too many towny mobs.");
 							return true;
 						}
 					}
@@ -179,25 +179,25 @@ public class FmCommand implements CommandExecutor {
 						player.sendMessage(ChatColor.RED + "You do not have permission to spawn this mob.");
 						return false;
 					}
-					newMob = new Archer(player.getLocation(), playerfaction);
+					newMob = new Archer(player.getLocation(), playertown);
 				} else if (split[1].equalsIgnoreCase("Swordsman")) {
 					if (!player.hasPermission("fmob.spawn") && !player.hasPermission("fmob.spawn.swordsman")) {
 						player.sendMessage(ChatColor.RED + "You do not have permission to spawn this mob.");
 						return false;
 					}
-					newMob = new Swordsman(player.getLocation(), playerfaction);
+					newMob = new Swordsman(player.getLocation(), playertown);
 				} else if (split[1].equalsIgnoreCase("Titan") || split[1].equalsIgnoreCase("Golem")) {
 					if (!player.hasPermission("fmob.spawn") && !player.hasPermission("fmob.spawn.titan")) {
 						player.sendMessage(ChatColor.RED + "You do not have permission to spawn this mob.");
 						return false;
 					}
-					newMob = new Titan(player.getLocation(), playerfaction);
+					newMob = new Titan(player.getLocation(), playertown);
 				} else if (split[1].equalsIgnoreCase("Mage")) {
 					if (!player.hasPermission("fmob.spawn") && !player.hasPermission("fmob.spawn.mage")) {
 						player.sendMessage(ChatColor.RED + "You do not have permission to spawn this mob.");
 						return false;
 					}
-					newMob = new Mage(player.getLocation(), playerfaction);
+					newMob = new Mage(player.getLocation(), playertown);
 				} else {
 					player.sendMessage(ChatColor.RED + "Unrecognized mob name");
 					return true;
@@ -210,14 +210,14 @@ public class FmCommand implements CommandExecutor {
 				
 				if (!player.hasPermission("fmob.bypass")) {
 					if (newMob.getPowerCost() > 0) {
-						double factionPowerUsage = Utils.countMobPowerInFaction(playerfaction);
-						if (playerfaction.getTotalBlocks() >= (factionPowerUsage + newMob.getPowerCost())) {
+						double townPowerUsage = Utils.countMobPowerInTown(playertown);
+						if (playertown.getTotalBlocks() >= (townPowerUsage + newMob.getPowerCost())) {
 			            	player.sendMessage(String.format("%sYour town is now using %s/%s power for towny mobs.", 
-			            			ChatColor.GREEN, Math.round(factionPowerUsage + newMob.getPowerCost()), playerfaction.getTotalBlocks()));
+			            			ChatColor.GREEN, Math.round(townPowerUsage + newMob.getPowerCost()), playertown.getTotalBlocks()));
 						} else {
 			            	player.sendMessage(String.format("%sYour town is using %s/%s power for towny mobs.", 
-			            			ChatColor.RED, Math.round(factionPowerUsage), playerfaction.getTotalBlocks()));
-			            	player.sendMessage(String.format("%sYou need %s more power.", ChatColor.RED, Math.round(factionPowerUsage + newMob.getPowerCost() - playerfaction.getTotalBlocks())));
+			            			ChatColor.RED, Math.round(townPowerUsage), playertown.getTotalBlocks()));
+			            	player.sendMessage(String.format("%sYou need %s more power.", ChatColor.RED, Math.round(townPowerUsage + newMob.getPowerCost() - playertown.getTotalBlocks())));
 			                return true;
 						}
 					}
@@ -263,15 +263,15 @@ public class FmCommand implements CommandExecutor {
 					return true;
 				}
 				Resident fplayer = null;
-				Town playerfaction = null;
+				Town playertown = null;
 				try {
 					fplayer = TownyUniverse.getDataSource().getResident(player.getName());
-					playerfaction = fplayer.getTown();
+					playertown = fplayer.getTown();
 				} catch (Exception ex) {
 					player.sendMessage(ChatColor.RED + "You must be in a town");
 					return true;
 				}
-				if (playerfaction == null) {
+				if (playertown == null) {
 					player.sendMessage(ChatColor.RED + "You must be in a town");
 					return true;
 				}
@@ -281,7 +281,7 @@ public class FmCommand implements CommandExecutor {
 				} else {
 					try {
 						int myColor = Integer.parseInt(split[1], 16);
-						TownyMobs.factionColors.put(playerfaction.getName(), myColor);
+						TownyMobs.townColors.put(playertown.getName(), myColor);
 						player.sendMessage(String.format("Set your town color to %s", StringUtils.leftPad(Integer.toHexString(myColor), 6, "0")));
 						plugin.updateList();
 					} catch (NumberFormatException e) {
@@ -315,10 +315,10 @@ public class FmCommand implements CommandExecutor {
 					return true;
 				} else {
 					Resident fplayer = null;
-					Town playerfaction = null;
+					Town playertown = null;
 					try {
 						fplayer = TownyUniverse.getDataSource().getResident(player.getName());
-						playerfaction = fplayer.getTown();
+						playertown = fplayer.getTown();
 					} catch (Exception ex) {
 						player.sendMessage(ChatColor.RED + "You must be in a town.");
 						return true;
@@ -326,7 +326,7 @@ public class FmCommand implements CommandExecutor {
 					List<TownyMob> selection = plugin.playerSelections.get(player.getName());
 					for (int i = selection.size()-1; i >= 0; i--) {
 						if (!selection.get(i).isAlive()
-								|| !selection.get(i).getFactionName().equals(playerfaction.getName())) {
+								|| !selection.get(i).getTownName().equals(playertown.getName())) {
 							selection.remove(i);
 						}
 					}
@@ -376,6 +376,7 @@ public class FmCommand implements CommandExecutor {
 						return true;
 					}
 					plugin.mobLeader.remove(player.getName());
+					@SuppressWarnings("deprecation")
 					Block block = player.getTargetBlock(null, 64);
 					if (block == null) {
 						player.sendMessage(ChatColor.RED + "You must be pointing at a block");

@@ -1,4 +1,4 @@
-package com.gmail.scyntrus.fmob;
+package com.gmail.scyntrus.tmob;
 
 import net.minecraft.server.v1_6_R3.Entity;
 
@@ -10,18 +10,18 @@ import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 
-import com.gmail.scyntrus.fmob.mobs.Archer;
-import com.gmail.scyntrus.fmob.mobs.Mage;
-import com.gmail.scyntrus.fmob.mobs.Swordsman;
-import com.gmail.scyntrus.fmob.mobs.Titan;
+import com.gmail.scyntrus.tmob.mobs.Archer;
+import com.gmail.scyntrus.tmob.mobs.Mage;
+import com.gmail.scyntrus.tmob.mobs.Swordsman;
+import com.gmail.scyntrus.tmob.mobs.Titan;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 
-public class FmcCommand implements CommandExecutor {
+public class TmcCommand implements CommandExecutor {
 
 	TownyMobs plugin;
 	
-	public FmcCommand(TownyMobs plugin) {
+	public TmcCommand(TownyMobs plugin) {
 		this.plugin = plugin;
 	}
 	
@@ -35,7 +35,7 @@ public class FmcCommand implements CommandExecutor {
 		}
 		
 		if (TownyMobs.mobList.size() >= TownyMobs.spawnLimit) {
-			sender.sendMessage("There are too many faction mobs");
+			sender.sendMessage("There are too many town mobs");
 			return true;
 		}
 		
@@ -59,28 +59,28 @@ public class FmcCommand implements CommandExecutor {
 			return false;
 		}
 		
-		Town faction = null;
+		Town town = null;
 		try {
-			faction = TownyUniverse.getDataSource().getTown(split[1]);
+			town = TownyUniverse.getDataSource().getTown(split[1]);
 		} catch (Exception ex) {
-			sender.sendMessage("Faction not found");
+			sender.sendMessage("Town not found");
 			return false;
 		}
 
-		if (faction == null) {
-			sender.sendMessage("Faction not found");
+		if (town == null) {
+			sender.sendMessage("Town not found");
 			return false;
 		}
 		
 		TownyMob newMob = null;
 		if (split[0].equalsIgnoreCase("Archer") || split[0].equalsIgnoreCase("Ranger")) {
-			newMob = new Archer(loc, faction);
+			newMob = new Archer(loc, town);
 		} else if (split[0].equalsIgnoreCase("Swordsman")) {
-			newMob = new Swordsman(loc, faction);
+			newMob = new Swordsman(loc, town);
 		} else if (split[0].equalsIgnoreCase("Titan") || split[0].equalsIgnoreCase("Golem")) {
-			newMob = new Titan(loc, faction);
+			newMob = new Titan(loc, town);
 		} else if (split[0].equalsIgnoreCase("Mage")) {
-			newMob = new Mage(loc, faction);
+			newMob = new Mage(loc, town);
 		} else {
 			sender.sendMessage("Unrecognized mob name");
 			return true;

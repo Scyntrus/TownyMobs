@@ -1,4 +1,4 @@
-package com.gmail.scyntrus.fmob;
+package com.gmail.scyntrus.tmob;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,10 +29,10 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.MetricsLite;
 
-import com.gmail.scyntrus.fmob.mobs.Archer;
-import com.gmail.scyntrus.fmob.mobs.Mage;
-import com.gmail.scyntrus.fmob.mobs.Swordsman;
-import com.gmail.scyntrus.fmob.mobs.Titan;
+import com.gmail.scyntrus.tmob.mobs.Archer;
+import com.gmail.scyntrus.tmob.mobs.Mage;
+import com.gmail.scyntrus.tmob.mobs.Swordsman;
+import com.gmail.scyntrus.tmob.mobs.Titan;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 
@@ -40,7 +40,7 @@ public class TownyMobs extends JavaPlugin {
 	
 	public PluginManager pm = null;
 	public static List<TownyMob> mobList = new ArrayList<TownyMob>();
-	public static Map<String,Integer> factionColors = new HashMap<String,Integer>();
+	public static Map<String,Integer> townColors = new HashMap<String,Integer>();
 	
 	public Map<String,Boolean> mobLeader = new HashMap<String,Boolean>();
 	
@@ -54,10 +54,10 @@ public class TownyMobs extends JavaPlugin {
 	public static String sndStep = "";
 	
 	public static int spawnLimit = 50;
-	public static int mobsPerFaction = 0;
+	public static int mobsPerTown = 0;
 	public static boolean attackMobs = true;
 	public static boolean noFriendlyFire = false;
-	public static boolean displayMobFaction = true;
+	public static boolean displayMobTown = true;
 	public static boolean attackZombies = true;
 	public static boolean alertAllies = true;
 	
@@ -124,10 +124,10 @@ public class TownyMobs extends JavaPlugin {
 		}
 
 		TownyMobs.spawnLimit = config.getInt("spawnLimit", TownyMobs.spawnLimit);
-		TownyMobs.mobsPerFaction = config.getInt("mobsPerFaction", TownyMobs.mobsPerFaction);
+		TownyMobs.mobsPerTown = config.getInt("mobsPerTown", TownyMobs.mobsPerTown);
 		TownyMobs.noFriendlyFire = config.getBoolean("noFriendlyFire", TownyMobs.noFriendlyFire);
 		TownyMobs.alertAllies = config.getBoolean("alertAllies", TownyMobs.alertAllies);
-		TownyMobs.displayMobFaction = config.getBoolean("displayMobFaction", TownyMobs.displayMobFaction);
+		TownyMobs.displayMobTown = config.getBoolean("displayMobTown", TownyMobs.displayMobTown);
 		TownyMobs.attackMobs = config.getBoolean("attackMobs", TownyMobs.attackMobs);
 		TownyMobs.attackZombies = config.getBoolean("attackZombies", TownyMobs.attackZombies);
 		TownyMobs.mobSpeed = (float) config.getDouble("mobSpeed", TownyMobs.mobSpeed);
@@ -198,9 +198,9 @@ public class TownyMobs extends JavaPlugin {
 	    	pm.disablePlugin(this);
 	    	return;
 	    }
-	    this.getCommand("fm").setExecutor(new FmCommand(this));
-	    if (config.getBoolean("fmcEnabled", false)) {
-		    this.getCommand("fmc").setExecutor(new FmcCommand(this));
+	    this.getCommand("tm").setExecutor(new TmCommand(this));
+	    if (config.getBoolean("tmcEnabled", false)) {
+		    this.getCommand("tmc").setExecutor(new TmcCommand(this));
 	    }
 	    this.pm.registerEvents(new EntityListener(this), this);
 	    this.pm.registerEvents(new CommandListener(this), this);
@@ -209,11 +209,11 @@ public class TownyMobs extends JavaPlugin {
 			try {
 				FileInputStream fileInputStream = new FileInputStream(colorFile);
 		    	ObjectInputStream oInputStream = new ObjectInputStream(fileInputStream);
-		    	TownyMobs.factionColors = (HashMap<String, Integer>) oInputStream.readObject();
+		    	TownyMobs.townColors = (HashMap<String, Integer>) oInputStream.readObject();
 		    	oInputStream.close();
 		    	fileInputStream.close();
 			} catch (Exception e) {
-	        	this.getLogger().severe("[TownyMobs] Error reading faction colors file, colors.dat");
+	        	this.getLogger().severe("[TownyMobs] Error reading town colors file, colors.dat");
 			}
 	    }
 	    
@@ -280,7 +280,7 @@ public class TownyMobs extends JavaPlugin {
 				}
 				org.bukkit.World world = this.getServer().getWorld(mobData.get(1));
 				if (world == null) {
-					System.out.println("Worldless Faction Mob found and removed. Did you delete or rename a world?");
+					System.out.println("Worldless Towny Mob found and removed. Did you delete or rename a world?");
 					if (!backup) {
 						backup = true;
 						try {
@@ -292,11 +292,11 @@ public class TownyMobs extends JavaPlugin {
 					}
 					continue;
 				}
-				Town faction = null;
+				Town town = null;
 				try {
-					faction = TownyUniverse.getDataSource().getTown(mobData.get(2));
+					town = TownyUniverse.getDataSource().getTown(mobData.get(2));
 				} catch (Exception ex) {
-					System.out.println("Factionless Faction Mob found and removed. Did something happen to Factions?");
+					System.out.println("Townless Towny Mob found and removed. Did something happen to Towns?");
 					if (!backup) {
 						backup = true;
 						try {
@@ -308,8 +308,8 @@ public class TownyMobs extends JavaPlugin {
 					}
 					continue;
 				}
-				if (faction == null) {
-					System.out.println("Factionless Faction Mob found and removed. Did something happen to Factions?");
+				if (town == null) {
+					System.out.println("Townless Towny Mob found and removed. Did something happen to Towns?");
 					if (!backup) {
 						backup = true;
 						try {
@@ -327,18 +327,18 @@ public class TownyMobs extends JavaPlugin {
 						Double.parseDouble(mobData.get(4)), 
 						Double.parseDouble(mobData.get(5)));
 				if (mobData.get(0).equalsIgnoreCase("Archer") || mobData.get(0).equalsIgnoreCase("Ranger")) {
-					newMob = new Archer(spawnLoc, faction);
+					newMob = new Archer(spawnLoc, town);
 				} else if (mobData.get(0).equalsIgnoreCase("Mage")) {
-					newMob = new Mage(spawnLoc, faction);
+					newMob = new Mage(spawnLoc, town);
 				} else if (mobData.get(0).equalsIgnoreCase("Swordsman")) {
-					newMob = new Swordsman(spawnLoc, faction);
+					newMob = new Swordsman(spawnLoc, town);
 				} else if (mobData.get(0).equalsIgnoreCase("Titan")) {
-					newMob = new Titan(spawnLoc, faction);
+					newMob = new Titan(spawnLoc, town);
 				} else {
 					continue;
 				}
-				if (newMob.getFaction() == null || newMob.getFactionName() == null) {
-					System.out.println("Factionless Faction Mob found and removed. Did something happen to Factions?");
+				if (newMob.getTown() == null || newMob.getTownName() == null) {
+					System.out.println("Townless Towny Mob found and removed. Did something happen to Towns?");
 					if (!backup) {
 						backup = true;
 						try {
@@ -380,14 +380,14 @@ public class TownyMobs extends JavaPlugin {
 		YamlConfiguration conf = new YamlConfiguration();
 		List<List<String>> save = new ArrayList<List<String>>();
 		for (TownyMob fmob : mobList) {
-			if (fmob.getFaction() == null) {
+			if (fmob.getTown() == null) {
 				continue;
 			}
 			List<String> mobData = new ArrayList<String>();
 			mobData.add(fmob.getTypeName()); //0
 			Location spawnLoc = fmob.getSpawn();
 			mobData.add(spawnLoc.getWorld().getName()); //1
-			mobData.add(fmob.getFactionName()); //2
+			mobData.add(fmob.getTownName()); //2
 			mobData.add(""+spawnLoc.getX()); //3
 			mobData.add(""+spawnLoc.getY());
 			mobData.add(""+spawnLoc.getZ());
@@ -406,19 +406,19 @@ public class TownyMobs extends JavaPlugin {
 			conf.save(new File(getDataFolder(), "data.dat"));
 			System.out.println("TownyMobs data saved.");
 		} catch (IOException e) {
-        	this.getLogger().severe("Failed to save faction mob data, data.dat");
+        	this.getLogger().severe("Failed to save TownyMob data, data.dat");
 		}
 		try {
 		    File colorFile = new File(getDataFolder(), "colors.dat");
 		    colorFile.createNewFile();
 			FileOutputStream fileOut = new FileOutputStream(colorFile);
 	    	ObjectOutputStream oOut = new ObjectOutputStream(fileOut);
-	    	oOut.writeObject(TownyMobs.factionColors);
+	    	oOut.writeObject(TownyMobs.townColors);
 	    	oOut.close();
 	    	fileOut.close();
 			System.out.println("TownyMobs color data saved.");
 		} catch (Exception e) {
-        	this.getLogger().severe("Error writing faction colors file, colors.dat");
+        	this.getLogger().severe("Error writing town colors file, colors.dat");
 		}
 	}
 	

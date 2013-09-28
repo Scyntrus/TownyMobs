@@ -1,4 +1,4 @@
-package com.gmail.scyntrus.fmob;
+package com.gmail.scyntrus.tmob;
 
 import net.minecraft.server.v1_6_R3.Entity;
 import net.minecraft.server.v1_6_R3.EntityLiving;
@@ -9,7 +9,7 @@ import org.bukkit.Location;
 import com.palmergames.bukkit.towny.object.Town;
 
 public interface TownyMob {
-	public Town getFaction();
+	public Town getTown();
 	public Location getSpawn();
 	public void setPosition(double x, double y, double z);
 	public double getlocX();
@@ -35,7 +35,7 @@ public interface TownyMob {
 	public String getOrder();
 	public void setPoi(double x, double y, double z);
 	public EntityLiving getEntity();
-	public String getFactionName();
+	public String getTownName();
 	public void clearAttackedBy();
 	public int getDrops();
 	public boolean softAgro(Entity entity);

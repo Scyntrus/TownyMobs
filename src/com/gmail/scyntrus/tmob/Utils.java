@@ -1,4 +1,4 @@
-package com.gmail.scyntrus.fmob;
+package com.gmail.scyntrus.tmob;
 
 import net.minecraft.server.v1_6_R3.Entity;
 import net.minecraft.server.v1_6_R3.EntityAnimal;
@@ -23,8 +23,8 @@ import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 
 public class Utils {
-	public static int FactionCheck(Entity entity, Town faction) {
-		if (entity == null || faction == null) {
+	public static int TownCheck(Entity entity, Town town) {
+		if (entity == null || town == null) {
 			return 0;
 		}
 		if (entity instanceof EntityPlayer) {
@@ -33,11 +33,11 @@ public class Utils {
 			try {
 				Resident resident = TownyUniverse.getDataSource().getResident(player.getName());
 				if (!resident.hasTown()) return 0;
-				if (resident.getTown().equals(faction)) return 1;
+				if (resident.getTown().equals(town)) return 1;
 				if (!resident.hasNation()) return 0;
-				if (resident.getTown().getNation().hasTown(faction)) return 1;
-				if (resident.getTown().getNation().hasAlly(faction.getNation())) return 1;
-				if (resident.getTown().getNation().hasEnemy(faction.getNation())) return -1;
+				if (resident.getTown().getNation().hasTown(town)) return 1;
+				if (resident.getTown().getNation().hasAlly(town.getNation())) return 1;
+				if (resident.getTown().getNation().hasEnemy(town.getNation())) return -1;
 				return 0;
 			} catch (Exception ex) {
 				return 0;
@@ -45,12 +45,12 @@ public class Utils {
 		} else if (entity instanceof TownyMob) {
 			TownyMob fmob = (TownyMob) entity;
 			try {
-				if (fmob.getFaction() == null) return 0;
-				if (fmob.getFaction().equals(faction)) return 1;
-				if (!fmob.getFaction().hasNation()) return 0;
-				if (fmob.getFaction().getNation().hasTown(faction)) return 1;
-				if (fmob.getFaction().getNation().hasAlly(faction.getNation())) return 1;
-				if (fmob.getFaction().getNation().hasEnemy(faction.getNation())) return -1;
+				if (fmob.getTown() == null) return 0;
+				if (fmob.getTown().equals(town)) return 1;
+				if (!fmob.getTown().hasNation()) return 0;
+				if (fmob.getTown().getNation().hasTown(town)) return 1;
+				if (fmob.getTown().getNation().hasAlly(town.getNation())) return 1;
+				if (fmob.getTown().getNation().hasEnemy(town.getNation())) return -1;
 				return 0;
 			} catch (Exception ex) {
 				return 0;
@@ -59,7 +59,7 @@ public class Utils {
 			EntityWolf wolf = (EntityWolf) entity;
 			if (wolf.isTamed()) {
 				if (wolf.getOwner() != null) {
-					return FactionCheck(wolf.getOwner(), faction);
+					return TownCheck(wolf.getOwner(), town);
 				} else {
 					return 0;
 				}
@@ -97,12 +97,12 @@ public class Utils {
 	
 	public static void giveColorArmor(TownyMob entity) {
 		int color = -1;
-		if (entity.getFaction() == null) {
+		if (entity.getTown() == null) {
 			return;
-		} else if (TownyMobs.factionColors.containsKey(entity.getFaction().getName())) {
-			color = TownyMobs.factionColors.get(entity.getFaction().getName());
+		} else if (TownyMobs.townColors.containsKey(entity.getTown().getName())) {
+			color = TownyMobs.townColors.get(entity.getTown().getName());
 		} else {
-			TownyMobs.factionColors.put(entity.getFaction().getName(), 10511680);
+			TownyMobs.townColors.put(entity.getTown().getName(), 10511680);
 		}
 		
 		if (color == -1 || color == 10511680) {
@@ -145,20 +145,20 @@ public class Utils {
 		return Math.sqrt(Math.pow(x1-x2,2) + Math.pow(y1-y2,2) + Math.pow(z1-z2,2));
 	}
 	
-	public static double countMobPowerInFaction(Town faction) {
+	public static double countMobPowerInTown(Town town) {
 		double power = 0;
 		for (TownyMob fmob : TownyMobs.mobList) {
-			if (fmob.getFactionName().equals(faction.getName())) {
+			if (fmob.getTownName().equals(town.getName())) {
 				power += fmob.getPowerCost();
 			}
 		}
 		return power;
 	}
 	
-	public static int countMobsInFaction(Town faction) {
+	public static int countMobsInTown(Town town) {
 		int count = 0;
 		for (TownyMob fmob : TownyMobs.mobList) {
-			if (fmob.getFactionName().equals(faction.getName())) {
+			if (fmob.getTownName().equals(town.getName())) {
 				count++;
 			}
 		}

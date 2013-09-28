@@ -1,4 +1,4 @@
-package com.gmail.scyntrus.fmob;
+package com.gmail.scyntrus.tmob;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

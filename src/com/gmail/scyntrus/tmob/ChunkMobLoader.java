@@ -1,4 +1,4 @@
-package com.gmail.scyntrus.fmob;
+package com.gmail.scyntrus.tmob;
 
 import net.minecraft.server.v1_6_R3.WorldServer;
 
@@ -8,8 +8,8 @@ public class ChunkMobLoader implements Runnable {
 
 	TownyMobs plugin;
 	
-    public ChunkMobLoader(TownyMobs factionMobs) {
-		this.plugin = factionMobs;
+    public ChunkMobLoader(TownyMobs townyMobs) {
+		this.plugin = townyMobs;
 	}
 
 	public void run() {
