@@ -29,10 +29,10 @@ feedAmount: 5
 
 # Set the maximum number of mobs a town can spawn, regardless of power
 # (0 = no limit)
-mobsPerFaction: 0
+mobsPerTown: 0
 
 # Display the mob's town name above the mob (in yellow)
-displayMobFaction: true
+displayMobTown: true
 
 # Set the normal movement speed of the mobs (Recommend between .3 and .5, default .3)
 mobSpeed: .3
