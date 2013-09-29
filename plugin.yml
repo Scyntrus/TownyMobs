@@ -43,7 +43,7 @@ permissions:
     tmob.bypass:
         description: Allows you to spawn mobs without restriction
         default: false
-    tmob.fmc:
+    tmob.tmc:
         description: Allows you to use /tmc, a command designed for command blocks
         default: false
     tmob.selectall:

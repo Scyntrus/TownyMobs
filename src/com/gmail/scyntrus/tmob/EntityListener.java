@@ -53,34 +53,34 @@ public class EntityListener implements Listener {
 		Entity entity = ((CraftEntity) e.getEntity()).getHandle();
 		if (entity != null && entity instanceof TownyMob) {
 			e.setCancelled(true);
-			TownyMob fmob = (TownyMob) entity;
-			if (fmob instanceof Titan) {
-				fmob.findTarget();
+			TownyMob tmob = (TownyMob) entity;
+			if (tmob instanceof Titan) {
+				tmob.findTarget();
 				return;
 			}
 			if (e.getTarget() != null) {
 				Entity target = ((CraftEntity) e.getTarget()).getHandle();
-				if (Utils.TownCheck(target, fmob.getTown()) == -1) {
-					fmob.setTarget(target);
+				if (Utils.TownCheck(target, tmob.getTown()) == -1) {
+					tmob.setTarget(target);
 					return;
 				}
 			}
-			fmob.findTarget();
+			tmob.findTarget();
 			return;
 		} else if (entity != null && entity instanceof EntityWolf) {
 			if (e.getTarget() != null) {
 				Entity target = ((CraftEntity) e.getTarget()).getHandle();
 				if (target instanceof TownyMob) {
 					EntityWolf wolf = (EntityWolf) entity;
-					TownyMob fmob = (TownyMob) target;
+					TownyMob tmob = (TownyMob) target;
 					if (wolf.isAngry()) {
 						return;
 					} else if (wolf.isTamed()) {
 						if (wolf.getOwner() != null) {
-							if (fmob.getGoalTarget().equals(wolf.getOwner())) {
+							if (tmob.getGoalTarget().equals(wolf.getOwner())) {
 								return;
 							}
-							switch (Utils.TownCheck(wolf.getOwner(), fmob.getTown())) {
+							switch (Utils.TownCheck(wolf.getOwner(), tmob.getTown())) {
 							case 1:
 							case 0:
 								e.setCancelled(true);
@@ -103,41 +103,41 @@ public class EntityListener implements Listener {
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEntityEvent e) {
 		if (((CraftEntity)e.getRightClicked()).getHandle() instanceof TownyMob) {
-			TownyMob fmob = (TownyMob) ((CraftEntity)e.getRightClicked()).getHandle();
-			if (fmob.getTown() == null) {
+			TownyMob tmob = (TownyMob) ((CraftEntity)e.getRightClicked()).getHandle();
+			if (tmob.getTown() == null) {
 				return;
 			}
 			Player player = e.getPlayer();
 			player.sendMessage(String.format("%sThis %s%s %sbelongs to town %s%s%s. HP: %s%s", 
-					ChatColor.GREEN, ChatColor.RED, fmob.getTypeName(), ChatColor.GREEN, ChatColor.RED, 
-					fmob.getTownName(), ChatColor.GREEN, ChatColor.RED, fmob.getHealth()));
+					ChatColor.GREEN, ChatColor.RED, tmob.getTypeName(), ChatColor.GREEN, ChatColor.RED, 
+					tmob.getTownName(), ChatColor.GREEN, ChatColor.RED, tmob.getHealth()));
 			try {
-				if (player.hasPermission("fmob.order") && TownyUniverse.getDataSource().getResident(player.getName()).getTown().equals(fmob.getTown())) {
+				if (player.hasPermission("tmob.order") && TownyUniverse.getDataSource().getResident(player.getName()).getTown().equals(tmob.getTown())) {
 					if (!plugin.playerSelections.containsKey(player.getName())) {
 						plugin.playerSelections.put(player.getName(), new ArrayList<TownyMob>());
 					}
-					if (plugin.playerSelections.get(player.getName()).contains(fmob)) {
-						plugin.playerSelections.get(player.getName()).remove(fmob);
-						player.sendMessage(String.format("%sYou have deselected this %s%s", ChatColor.GREEN, ChatColor.RED, fmob.getTypeName()));
+					if (plugin.playerSelections.get(player.getName()).contains(tmob)) {
+						plugin.playerSelections.get(player.getName()).remove(tmob);
+						player.sendMessage(String.format("%sYou have deselected this %s%s", ChatColor.GREEN, ChatColor.RED, tmob.getTypeName()));
 						if (plugin.playerSelections.get(player.getName()).isEmpty()) {
 							plugin.playerSelections.remove(player.getName());
 							player.sendMessage(String.format("%sYou have no mobs selected", ChatColor.GREEN));
 						}
 					} else {
-						plugin.playerSelections.get(player.getName()).add(fmob);
-						player.sendMessage(String.format("%sYou have selected this %s%s", ChatColor.GREEN, ChatColor.RED, fmob.getTypeName()));
-						fmob.setPoi(fmob.getlocX(), fmob.getlocY(), fmob.getlocZ());
-						fmob.setOrder("poi");
+						plugin.playerSelections.get(player.getName()).add(tmob);
+						player.sendMessage(String.format("%sYou have selected this %s%s", ChatColor.GREEN, ChatColor.RED, tmob.getTypeName()));
+						tmob.setPoi(tmob.getlocX(), tmob.getlocY(), tmob.getlocZ());
+						tmob.setOrder("poi");
 					}
 				}
 			} catch (Exception ex) {}
-			fmob.updateMob();
+			tmob.updateMob();
 			if (TownyMobs.feedEnabled) {
 				if (player.getItemInHand().getType() == Material.APPLE) {
 					player.getItemInHand().setAmount(player.getItemInHand().getAmount() - 1);
-					float iHp = fmob.getHealth();
-					fmob.setHealth(fmob.getHealth() + TownyMobs.feedAmount);
-					player.sendMessage(String.format("%sThis mob has been healed by %s%s", ChatColor.GREEN, ChatColor.RED, fmob.getHealth() - iHp));
+					float iHp = tmob.getHealth();
+					tmob.setHealth(tmob.getHealth() + TownyMobs.feedAmount);
+					player.sendMessage(String.format("%sThis mob has been healed by %s%s", ChatColor.GREEN, ChatColor.RED, tmob.getHealth() - iHp));
 				}
 			}
 		}
@@ -167,9 +167,9 @@ public class EntityListener implements Listener {
 		if (damager == null) return;
 		
 		if (damager.getHandle() instanceof TownyMob) {
-			TownyMob fmob = (TownyMob) damager.getHandle();
-			if (Utils.TownCheck(entity.getHandle(), fmob.getTown()) < 1) {
-				if (fmob.isAlive()) {
+			TownyMob tmob = (TownyMob) damager.getHandle();
+			if (Utils.TownCheck(entity.getHandle(), tmob.getTown()) < 1) {
+				if (tmob.isAlive()) {
 					if (entity instanceof CraftCreature) {
 						((CraftCreature) entity).getHandle().setTarget(((CraftLivingEntity) damager).getHandle());
 					}
@@ -184,16 +184,16 @@ public class EntityListener implements Listener {
 			}
 		} else if ((damager instanceof Player)
 				&& (entity.getHandle() instanceof TownyMob)) {
-			TownyMob fmob = (TownyMob) entity.getHandle();
+			TownyMob tmob = (TownyMob) entity.getHandle();
 			Player player = (Player) damager;
 			try {
-			if (Utils.TownCheck(((CraftPlayer) player).getHandle(), fmob.getTown()) >= 1) {
-				if (fmob.getTown().equals(TownyUniverse.getDataSource().getResident(player.getName()).getTown())) {
-					player.sendMessage(String.format("%sYou hit a friendly %s%s", ChatColor.YELLOW, ChatColor.RED, fmob.getTypeName()));
-					fmob.getEntity().getBukkitEntity().setMetadata("NPC", new FixedMetadataValue(plugin, true));
+			if (Utils.TownCheck(((CraftPlayer) player).getHandle(), tmob.getTown()) >= 1) {
+				if (tmob.getTown().equals(TownyUniverse.getDataSource().getResident(player.getName()).getTown())) {
+					player.sendMessage(String.format("%sYou hit a friendly %s%s", ChatColor.YELLOW, ChatColor.RED, tmob.getTypeName()));
+					tmob.getEntity().getBukkitEntity().setMetadata("NPC", new FixedMetadataValue(plugin, true));
 					return;
 				} else {
-					player.sendMessage(String.format("%sYou cannot hit %s%s%s's %s%s", ChatColor.YELLOW, ChatColor.RED, fmob.getTownName(), ChatColor.YELLOW, ChatColor.RED, fmob.getTypeName()));
+					player.sendMessage(String.format("%sYou cannot hit %s%s%s's %s%s", ChatColor.YELLOW, ChatColor.RED, tmob.getTownName(), ChatColor.YELLOW, ChatColor.RED, tmob.getTypeName()));
 					e.setCancelled(true);
 					return;
 				}
@@ -209,10 +209,10 @@ public class EntityListener implements Listener {
 			List<org.bukkit.entity.Entity> aoeList = entity.getNearbyEntities(8, 8, 8);
 			for (org.bukkit.entity.Entity nearEntity : aoeList) {
 				if (((CraftEntity) nearEntity).getHandle() instanceof TownyMob) {
-					TownyMob fmob2 = (TownyMob) ((CraftEntity) nearEntity).getHandle();
-					if (Utils.TownCheck(fmob2.getEntity(), town) == 1 && 
+					TownyMob tmob2 = (TownyMob) ((CraftEntity) nearEntity).getHandle();
+					if (Utils.TownCheck(tmob2.getEntity(), town) == 1 && 
 							Utils.TownCheck(damager.getHandle(), town) < 1) {
-						fmob2.softAgro(damager.getHandle());
+						tmob2.softAgro(damager.getHandle());
 					}
 				}
 			}
@@ -222,10 +222,10 @@ public class EntityListener implements Listener {
 				List<org.bukkit.entity.Entity> aoeList = entity.getNearbyEntities(8, 8, 8);
 				for (org.bukkit.entity.Entity nearEntity : aoeList) {
 					if (((CraftEntity) nearEntity).getHandle() instanceof TownyMob) {
-						TownyMob fmob2 = (TownyMob) ((CraftEntity) nearEntity).getHandle();
-						if (Utils.TownCheck(fmob2.getEntity(), town) == 1 && 
+						TownyMob tmob2 = (TownyMob) ((CraftEntity) nearEntity).getHandle();
+						if (Utils.TownCheck(tmob2.getEntity(), town) == 1 && 
 								Utils.TownCheck(damager.getHandle(), town) < 1) {
-							fmob2.softAgro(damager.getHandle());
+							tmob2.softAgro(damager.getHandle());
 						}
 					}
 				}
@@ -248,19 +248,19 @@ public class EntityListener implements Listener {
 			org.bukkit.entity.Entity entity = ((EntityDamageByEntityEvent) lastDamage).getDamager();
 			if (entity != null) {
 				if (((CraftEntity) entity).getHandle() instanceof TownyMob) {
-					TownyMob fmob = (TownyMob) ((CraftEntity) entity).getHandle();
-					if (fmob.getTown() == null) {
+					TownyMob tmob = (TownyMob) ((CraftEntity) entity).getHandle();
+					if (tmob.getTown() == null) {
 						return;
 					}
-					e.setDeathMessage(e.getEntity().getDisplayName() + " was killed by " + ChatColor.RED + fmob.getTownName() + ChatColor.RESET + "'s " + ChatColor.RED + fmob.getTypeName());
+					e.setDeathMessage(e.getEntity().getDisplayName() + " was killed by " + ChatColor.RED + tmob.getTownName() + ChatColor.RESET + "'s " + ChatColor.RED + tmob.getTypeName());
 				} else if (entity instanceof Projectile){
 					Projectile arrow = (Projectile) entity;
 					if (((CraftLivingEntity) arrow.getShooter()).getHandle() instanceof TownyMob) {
-						TownyMob fmob = (TownyMob) ((CraftLivingEntity) arrow.getShooter()).getHandle();
-						if (fmob.getTown() == null) {
+						TownyMob tmob = (TownyMob) ((CraftLivingEntity) arrow.getShooter()).getHandle();
+						if (tmob.getTown() == null) {
 							return;
 						}
-						e.setDeathMessage(e.getEntity().getDisplayName() + " was shot by " + ChatColor.RED + fmob.getTownName() + ChatColor.RESET + "'s " + ChatColor.RED + fmob.getTypeName());
+						e.setDeathMessage(e.getEntity().getDisplayName() + " was shot by " + ChatColor.RED + tmob.getTownName() + ChatColor.RESET + "'s " + ChatColor.RED + tmob.getTypeName());
 					}
 				}
 			}
@@ -285,13 +285,13 @@ public class EntityListener implements Listener {
 			Player player = e.getPlayer();
 			Location loc = player.getLocation();
 			int count = 0;
-			for (TownyMob fmob : plugin.playerSelections.get(player.getName())) {
-				if (fmob.getSpawn().getWorld().getName().equals(loc.getWorld().getName())) {
+			for (TownyMob tmob : plugin.playerSelections.get(player.getName())) {
+				if (tmob.getSpawn().getWorld().getName().equals(loc.getWorld().getName())) {
 					double tmpX = (1.5-(count%4))*1.5;
 					double tmpZ = ((-1.) - Math.floor(count / 4.))*1.5;
 					double tmpH = Math.hypot(tmpX, tmpZ);
 					double angle = Math.atan2(tmpZ, tmpX) + (loc.getYaw() * Math.PI / 180.);
-					fmob.setPoi(loc.getX() + tmpH*Math.cos(angle), loc.getY(), loc.getZ() + tmpH*Math.sin(angle));
+					tmob.setPoi(loc.getX() + tmpH*Math.cos(angle), loc.getY(), loc.getZ() + tmpH*Math.sin(angle));
 					count += 1;
 				}
 			}
@@ -302,10 +302,10 @@ public class EntityListener implements Listener {
 	public void onPotionSplash(PotionSplashEvent e) {
 		if (e.getPotion().getShooter() == null) return;
 		if (((CraftEntity) e.getPotion().getShooter()).getHandle() instanceof TownyMob) {
-			TownyMob fmob = (TownyMob) ((CraftEntity) e.getPotion().getShooter()).getHandle();
+			TownyMob tmob = (TownyMob) ((CraftEntity) e.getPotion().getShooter()).getHandle();
 			for (LivingEntity entity : e.getAffectedEntities()) {
-				if (Utils.TownCheck(((CraftEntity) entity).getHandle(), fmob.getTown()) < 1) {
-					if (fmob.isAlive()) {
+				if (Utils.TownCheck(((CraftEntity) entity).getHandle(), tmob.getTown()) < 1) {
+					if (tmob.isAlive()) {
 						if (entity instanceof CraftCreature) {
 							((CraftCreature) entity).getHandle().setTarget(((CraftLivingEntity) e.getPotion().getShooter()).getHandle());
 						}

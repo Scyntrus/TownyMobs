@@ -379,26 +379,26 @@ public class TownyMobs extends JavaPlugin {
 	public void saveMobList() {
 		YamlConfiguration conf = new YamlConfiguration();
 		List<List<String>> save = new ArrayList<List<String>>();
-		for (TownyMob fmob : mobList) {
-			if (fmob.getTown() == null) {
+		for (TownyMob tmob : mobList) {
+			if (tmob.getTown() == null) {
 				continue;
 			}
 			List<String> mobData = new ArrayList<String>();
-			mobData.add(fmob.getTypeName()); //0
-			Location spawnLoc = fmob.getSpawn();
+			mobData.add(tmob.getTypeName()); //0
+			Location spawnLoc = tmob.getSpawn();
 			mobData.add(spawnLoc.getWorld().getName()); //1
-			mobData.add(fmob.getTownName()); //2
+			mobData.add(tmob.getTownName()); //2
 			mobData.add(""+spawnLoc.getX()); //3
 			mobData.add(""+spawnLoc.getY());
 			mobData.add(""+spawnLoc.getZ());
-			mobData.add(""+fmob.getlocX()); //6
-			mobData.add(""+fmob.getlocY());
-			mobData.add(""+fmob.getlocZ());
-			mobData.add(""+fmob.getHealth()); //9
-			mobData.add(""+fmob.getPoiX()); //10
-			mobData.add(""+fmob.getPoiY());
-			mobData.add(""+fmob.getPoiZ());
-			mobData.add(fmob.getOrder()); //13
+			mobData.add(""+tmob.getlocX()); //6
+			mobData.add(""+tmob.getlocY());
+			mobData.add(""+tmob.getlocZ());
+			mobData.add(""+tmob.getHealth()); //9
+			mobData.add(""+tmob.getPoiX()); //10
+			mobData.add(""+tmob.getPoiY());
+			mobData.add(""+tmob.getPoiZ());
+			mobData.add(tmob.getOrder()); //13
 			save.add(mobData);
 		}
 		conf.set("data", save);

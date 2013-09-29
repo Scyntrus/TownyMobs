@@ -28,14 +28,14 @@ public class TmcCommand implements CommandExecutor {
 	@Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] split) {
 		if (sender instanceof Player) {
-			if (!sender.hasPermission("fmob.fmc")) {
+			if (!sender.hasPermission("tmob.tmc")) {
 				sender.sendMessage("You do not have permission");
 				return true;
 			}
 		}
 		
 		if (TownyMobs.mobList.size() >= TownyMobs.spawnLimit) {
-			sender.sendMessage("There are too many town mobs");
+			sender.sendMessage("There are too many Towny mobs");
 			return true;
 		}
 		

@@ -9,10 +9,10 @@ public class DeadChecker implements Runnable {
 	}
 
 	public void run() {
-		for (TownyMob fmob : TownyMobs.mobList) {
- 			if (fmob.getEntity().dead && fmob.getHealth() > 0) {
- 				fmob.getEntity().dead = false;
- 				//fmob.getEntity().world.addEntity(fmob.getEntity(), SpawnReason.CUSTOM);
+		for (TownyMob tmob : TownyMobs.mobList) {
+ 			if (tmob.getEntity().dead && tmob.getHealth() > 0) {
+ 				tmob.getEntity().dead = false;
+ 				//tmob.getEntity().world.addEntity(tmob.getEntity(), SpawnReason.CUSTOM);
  			}
 		}
     }

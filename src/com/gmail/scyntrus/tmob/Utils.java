@@ -43,14 +43,14 @@ public class Utils {
 				return 0;
 			}
 		} else if (entity instanceof TownyMob) {
-			TownyMob fmob = (TownyMob) entity;
+			TownyMob tmob = (TownyMob) entity;
 			try {
-				if (fmob.getTown() == null) return 0;
-				if (fmob.getTown().equals(town)) return 1;
-				if (!fmob.getTown().hasNation()) return 0;
-				if (fmob.getTown().getNation().hasTown(town)) return 1;
-				if (fmob.getTown().getNation().hasAlly(town.getNation())) return 1;
-				if (fmob.getTown().getNation().hasEnemy(town.getNation())) return -1;
+				if (tmob.getTown() == null) return 0;
+				if (tmob.getTown().equals(town)) return 1;
+				if (!tmob.getTown().hasNation()) return 0;
+				if (tmob.getTown().getNation().hasTown(town)) return 1;
+				if (tmob.getTown().getNation().hasAlly(town.getNation())) return 1;
+				if (tmob.getTown().getNation().hasEnemy(town.getNation())) return -1;
 				return 0;
 			} catch (Exception ex) {
 				return 0;
@@ -147,9 +147,9 @@ public class Utils {
 	
 	public static double countMobPowerInTown(Town town) {
 		double power = 0;
-		for (TownyMob fmob : TownyMobs.mobList) {
-			if (fmob.getTownName().equals(town.getName())) {
-				power += fmob.getPowerCost();
+		for (TownyMob tmob : TownyMobs.mobList) {
+			if (tmob.getTownName().equals(town.getName())) {
+				power += tmob.getPowerCost();
 			}
 		}
 		return power;
@@ -157,8 +157,8 @@ public class Utils {
 	
 	public static int countMobsInTown(Town town) {
 		int count = 0;
-		for (TownyMob fmob : TownyMobs.mobList) {
-			if (fmob.getTownName().equals(town.getName())) {
+		for (TownyMob tmob : TownyMobs.mobList) {
+			if (tmob.getTownName().equals(town.getName())) {
 				count++;
 			}
 		}

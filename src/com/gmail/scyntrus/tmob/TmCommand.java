@@ -41,20 +41,20 @@ public class TmCommand implements CommandExecutor {
 				return false;
 			} else if (split[0].equalsIgnoreCase("help")) {
 				//Basic help info here.
-				player.sendMessage("/fm spawn [mob]");
+				player.sendMessage("/tm spawn [mob]");
 				player.sendMessage("Mobs: Archer, Swordsman, Titan, Mage");
-				player.sendMessage("/fm color [color]");
+				player.sendMessage("/tm color [color]");
 				player.sendMessage("Color is in RRGGBB format");
-				player.sendMessage("/fm order [order]");
+				player.sendMessage("/tm order [order]");
 				player.sendMessage("Orders: gohome, follow, stop, patrolHere, wander, tpHome, tpHere");
 				player.sendMessage("Before giving orders, you must select mobs by right-clicking them");
 			} else if (split[0].equalsIgnoreCase("info")) {
-				if (!player.hasPermission("fmob.spawn")) {
+				if (!player.hasPermission("tmob.spawn")) {
 					player.sendMessage(ChatColor.RED + "You do not have permission to spawn towny mobs.");
 				} else {
 					player.sendMessage(ChatColor.GREEN + "You have permission to spawn towny mobs");
 				}
-				if (!player.hasPermission("fmob.order")) {
+				if (!player.hasPermission("tmob.order")) {
 					player.sendMessage(ChatColor.RED + "You do not have permission to order town mobs.");
 				} else {
 					player.sendMessage(ChatColor.GREEN + "You have permission to order towny mobs");
@@ -97,7 +97,7 @@ public class TmCommand implements CommandExecutor {
 				player.sendMessage("You have not selected any mob");
 				return true;
 			} else if (split[0].equalsIgnoreCase("selectall")) {
-				if (!player.hasPermission("fmob.selectall")) {
+				if (!player.hasPermission("tmob.selectall")) {
 					player.sendMessage(ChatColor.RED + "You do not have permission.");
 				}
 				if (plugin.playerSelections.containsKey(player.getName())) {
@@ -107,9 +107,9 @@ public class TmCommand implements CommandExecutor {
 				}
 				try {
 					Resident fplayer = TownyUniverse.getDataSource().getResident(player.getName());
-					for (TownyMob fmob : TownyMobs.mobList) {
-						if (fmob.getTown().getName().equals(fplayer.getTown().getName())) {
-							plugin.playerSelections.get(player.getName()).add(fmob);
+					for (TownyMob tmob : TownyMobs.mobList) {
+						if (tmob.getTown().getName().equals(fplayer.getTown().getName())) {
+							plugin.playerSelections.get(player.getName()).add(tmob);
 						}
 					}
 				} catch (Exception ex) {
@@ -121,8 +121,8 @@ public class TmCommand implements CommandExecutor {
 			} else if (split[0].equalsIgnoreCase("selection")) {
 				if (plugin.playerSelections.containsKey(player.getName())) {
 					player.sendMessage(ChatColor.GREEN + "== Selection: ==");
-					for (TownyMob fmob : plugin.playerSelections.get(player.getName())) {
-						if (fmob.isAlive()) player.sendMessage(ChatColor.RED + fmob.getTypeName());
+					for (TownyMob tmob : plugin.playerSelections.get(player.getName())) {
+						if (tmob.isAlive()) player.sendMessage(ChatColor.RED + tmob.getTypeName());
 					}
 					player.sendMessage(ChatColor.GREEN + "================");
 					return true;
@@ -130,11 +130,11 @@ public class TmCommand implements CommandExecutor {
 				player.sendMessage("You have not selected any mob");
 				return true;
 			} else if (split[0].equalsIgnoreCase("spawn")) {
-				if (!player.hasPermission("fmob.spawn") &&
-						!player.hasPermission("fmob.spawn.archer") &&
-						!player.hasPermission("fmob.spawn.mage") &&
-						!player.hasPermission("fmob.spawn.swordsman") &&
-						!player.hasPermission("fmob.spawn.titan")) {
+				if (!player.hasPermission("tmob.spawn") &&
+						!player.hasPermission("tmob.spawn.archer") &&
+						!player.hasPermission("tmob.spawn.mage") &&
+						!player.hasPermission("tmob.spawn.swordsman") &&
+						!player.hasPermission("tmob.spawn.titan")) {
 					player.sendMessage(ChatColor.RED + "You do not have permission.");
 					return true;
 				}
@@ -152,7 +152,7 @@ public class TmCommand implements CommandExecutor {
 					player.sendMessage(ChatColor.RED + "You must be in a town.");
 					return true;
 				}
-				if (!player.hasPermission("fmob.bypass")) {
+				if (!player.hasPermission("tmob.bypass")) {
 					String areatown = TownyUniverse.getTownName(loc);
 					if (!playertown.getName().equals(areatown)) {
 						player.sendMessage(ChatColor.RED + "You may only spawn mobs in your town");
@@ -175,25 +175,25 @@ public class TmCommand implements CommandExecutor {
 					player.sendMessage(ChatColor.RED + "You must specify a mob");
 					return true;
 				} else if (split[1].equalsIgnoreCase("Archer") || split[1].equalsIgnoreCase("Ranger")) {
-					if (!player.hasPermission("fmob.spawn") && !player.hasPermission("fmob.spawn.archer")) {
+					if (!player.hasPermission("tmob.spawn") && !player.hasPermission("tmob.spawn.archer")) {
 						player.sendMessage(ChatColor.RED + "You do not have permission to spawn this mob.");
 						return false;
 					}
 					newMob = new Archer(player.getLocation(), playertown);
 				} else if (split[1].equalsIgnoreCase("Swordsman")) {
-					if (!player.hasPermission("fmob.spawn") && !player.hasPermission("fmob.spawn.swordsman")) {
+					if (!player.hasPermission("tmob.spawn") && !player.hasPermission("tmob.spawn.swordsman")) {
 						player.sendMessage(ChatColor.RED + "You do not have permission to spawn this mob.");
 						return false;
 					}
 					newMob = new Swordsman(player.getLocation(), playertown);
 				} else if (split[1].equalsIgnoreCase("Titan") || split[1].equalsIgnoreCase("Golem")) {
-					if (!player.hasPermission("fmob.spawn") && !player.hasPermission("fmob.spawn.titan")) {
+					if (!player.hasPermission("tmob.spawn") && !player.hasPermission("tmob.spawn.titan")) {
 						player.sendMessage(ChatColor.RED + "You do not have permission to spawn this mob.");
 						return false;
 					}
 					newMob = new Titan(player.getLocation(), playertown);
 				} else if (split[1].equalsIgnoreCase("Mage")) {
-					if (!player.hasPermission("fmob.spawn") && !player.hasPermission("fmob.spawn.mage")) {
+					if (!player.hasPermission("tmob.spawn") && !player.hasPermission("tmob.spawn.mage")) {
 						player.sendMessage(ChatColor.RED + "You do not have permission to spawn this mob.");
 						return false;
 					}
@@ -208,7 +208,7 @@ public class TmCommand implements CommandExecutor {
 					return true;
 				}
 				
-				if (!player.hasPermission("fmob.bypass")) {
+				if (!player.hasPermission("tmob.bypass")) {
 					if (newMob.getPowerCost() > 0) {
 						double townPowerUsage = Utils.countMobPowerInTown(playertown);
 						if (playertown.getTotalBlocks() >= (townPowerUsage + newMob.getPowerCost())) {
@@ -244,7 +244,7 @@ public class TmCommand implements CommandExecutor {
 				} else {
 					newMob.die();
 					player.sendMessage(String.format("%sYou have failed to spawn a %s", ChatColor.RED, newMob.getTypeName()));
-					if (!player.hasPermission("fmob.bypass")) {
+					if (!player.hasPermission("tmob.bypass")) {
 						if (plugin.vaultEnabled && newMob.getMoneyCost() > 0) {
 				            EconomyResponse r = plugin.econ.depositPlayer(player.getName(), newMob.getMoneyCost());
 				            if(r.transactionSuccess()) {
@@ -258,7 +258,7 @@ public class TmCommand implements CommandExecutor {
 					}
 				}
 			} else if (split[0].equalsIgnoreCase("color")) {
-				if (!player.hasPermission("fmob.color")) {
+				if (!player.hasPermission("tmob.color")) {
 					player.sendMessage(ChatColor.RED + "You do not have permission");
 					return true;
 				}
@@ -301,7 +301,7 @@ public class TmCommand implements CommandExecutor {
 					System.out.println("Towny Mobs data saved via command");
 				}
 			} else if (split[0].equalsIgnoreCase("order")) {
-				if (!player.hasPermission("fmob.order")) {
+				if (!player.hasPermission("tmob.order")) {
 					player.sendMessage(ChatColor.RED + "You do not have permission");
 					return true;
 				}
@@ -339,10 +339,10 @@ public class TmCommand implements CommandExecutor {
 				
 				if (split[1].equalsIgnoreCase("gohome") || split[1].equalsIgnoreCase("home")) {
 					plugin.mobLeader.remove(player.getName());
-					for (TownyMob fmob : plugin.playerSelections.get(player.getName())) {
-						fmob.setOrder("home");
-						Location loc = fmob.getSpawn();
-						fmob.setPoi(loc.getX(), loc.getY(), loc.getZ());
+					for (TownyMob tmob : plugin.playerSelections.get(player.getName())) {
+						tmob.setOrder("home");
+						Location loc = tmob.getSpawn();
+						tmob.setPoi(loc.getX(), loc.getY(), loc.getZ());
 					}
 					player.sendMessage(ChatColor.GREEN + "You sent your mobs home");
 					return true;
@@ -350,14 +350,14 @@ public class TmCommand implements CommandExecutor {
 					plugin.mobLeader.put(player.getName(), true);
 					Location loc = player.getLocation();
 					int count = 0;
-					for (TownyMob fmob : plugin.playerSelections.get(player.getName())) {
-						if (fmob.getSpawn().getWorld().getName().equals(loc.getWorld().getName())) {
+					for (TownyMob tmob : plugin.playerSelections.get(player.getName())) {
+						if (tmob.getSpawn().getWorld().getName().equals(loc.getWorld().getName())) {
 							double tmpX = (1.5-(count%4))*1.5;
 							double tmpZ = ((-1.) - Math.floor(count / 4.))*1.5;
 							double tmpH = Math.hypot(tmpX, tmpZ);
 							double angle = Math.atan2(tmpZ, tmpX) + (loc.getYaw() * Math.PI / 180.);
-							fmob.setPoi(loc.getX() + tmpH*Math.cos(angle), loc.getY(), loc.getZ() + tmpH*Math.sin(angle));
-							fmob.setOrder("poi");
+							tmob.setPoi(loc.getX() + tmpH*Math.cos(angle), loc.getY(), loc.getZ() + tmpH*Math.sin(angle));
+							tmob.setOrder("poi");
 							count += 1;
 						}
 					}
@@ -365,13 +365,13 @@ public class TmCommand implements CommandExecutor {
 					return true;
 				} else if (split[1].equalsIgnoreCase("stop")) {
 					plugin.mobLeader.remove(player.getName());
-					for (TownyMob fmob : plugin.playerSelections.get(player.getName())) {
-						fmob.setOrder("poi");
+					for (TownyMob tmob : plugin.playerSelections.get(player.getName())) {
+						tmob.setOrder("poi");
 					}
 					player.sendMessage(ChatColor.GREEN + "You told your mobs to stop");
 					return true;
 				} else if (split[1].equalsIgnoreCase("moveToPoint") || split[1].equalsIgnoreCase("move") || split[1].equalsIgnoreCase("point")) {
-					if (!player.hasPermission("fmob.order.move")) {
+					if (!player.hasPermission("tmob.order.move")) {
 						player.sendMessage(ChatColor.RED + "You do not have permission");
 						return true;
 					}
@@ -385,14 +385,14 @@ public class TmCommand implements CommandExecutor {
 					Location loc = block.getLocation().add(0,1,0);
 					Location playerLoc = player.getLocation();
 					int count = 0;
-					for (TownyMob fmob : plugin.playerSelections.get(player.getName())) {
-						if (fmob.getSpawn().getWorld().getName().equals(playerLoc.getWorld().getName())) {
+					for (TownyMob tmob : plugin.playerSelections.get(player.getName())) {
+						if (tmob.getSpawn().getWorld().getName().equals(playerLoc.getWorld().getName())) {
 							double tmpX = (1.5-(count%4))*1.5;
 							double tmpZ = ((-1.) - Math.floor(count / 4.))*1.5;
 							double tmpH = Math.hypot(tmpX, tmpZ);
 							double angle = Math.atan2(tmpZ, tmpX) + (playerLoc.getYaw() * Math.PI / 180.);
-							fmob.setPoi(loc.getX() + tmpH*Math.cos(angle), loc.getY(), loc.getZ() + tmpH*Math.sin(angle));
-							fmob.setOrder("poi");
+							tmob.setPoi(loc.getX() + tmpH*Math.cos(angle), loc.getY(), loc.getZ() + tmpH*Math.sin(angle));
+							tmob.setOrder("poi");
 							count += 1;
 						}
 					}
@@ -401,83 +401,83 @@ public class TmCommand implements CommandExecutor {
 				} else if (split[1].equalsIgnoreCase("patrolHere") || split[1].equalsIgnoreCase("patrol")) {
 					plugin.mobLeader.remove(player.getName());
 					Location loc = player.getLocation();
-					for (TownyMob fmob : plugin.playerSelections.get(player.getName())) {
-						if (fmob.getSpawn().getWorld().getName().equals(loc.getWorld().getName())) {
-							fmob.setOrder("ppoi");
-							fmob.setPoi(loc.getX(), loc.getY(), loc.getZ());
+					for (TownyMob tmob : plugin.playerSelections.get(player.getName())) {
+						if (tmob.getSpawn().getWorld().getName().equals(loc.getWorld().getName())) {
+							tmob.setOrder("ppoi");
+							tmob.setPoi(loc.getX(), loc.getY(), loc.getZ());
 						} else {
-							player.sendMessage(String.format("%s%s is on a different world", ChatColor.RED, fmob.getTypeName()));
+							player.sendMessage(String.format("%s%s is on a different world", ChatColor.RED, tmob.getTypeName()));
 						}
 					}
 					player.sendMessage(ChatColor.GREEN + "Your mobs will now patrol from their home to here");
 					return true;
 				} else if (split[1].equalsIgnoreCase("wander")) {
 					plugin.mobLeader.remove(player.getName());
-					for (TownyMob fmob : plugin.playerSelections.get(player.getName())) {
-						fmob.setOrder("wander");
+					for (TownyMob tmob : plugin.playerSelections.get(player.getName())) {
+						tmob.setOrder("wander");
 					}
 					player.sendMessage(ChatColor.GREEN + "Your mobs will now wander around");
 					return true;
 				} else if (split[1].equalsIgnoreCase("setHome")) {
 					plugin.mobLeader.put(player.getName(), true);
 					Location loc = player.getLocation();
-					for (TownyMob fmob : plugin.playerSelections.get(player.getName())) {
-						if (fmob.getSpawn().getWorld().equals(loc.getWorld())) {
-							fmob.setOrder("home");
-							Location spawnLoc = fmob.getSpawn();
+					for (TownyMob tmob : plugin.playerSelections.get(player.getName())) {
+						if (tmob.getSpawn().getWorld().equals(loc.getWorld())) {
+							tmob.setOrder("home");
+							Location spawnLoc = tmob.getSpawn();
 							spawnLoc.setX(loc.getX());
 							spawnLoc.setY(loc.getY());
 							spawnLoc.setZ(loc.getZ());
-							fmob.setPoi(spawnLoc.getX(), spawnLoc.getY(), spawnLoc.getZ());
+							tmob.setPoi(spawnLoc.getX(), spawnLoc.getY(), spawnLoc.getZ());
 						} else {
-							player.sendMessage(String.format("%s%s is on a different world", ChatColor.RED, fmob.getTypeName()));
+							player.sendMessage(String.format("%s%s is on a different world", ChatColor.RED, tmob.getTypeName()));
 						}
 					}
 					player.sendMessage(ChatColor.GREEN + "You set your position as your mob's new home");
 					return true;
 				} else if (split[1].equalsIgnoreCase("tpHome")) {
 					plugin.mobLeader.remove(player.getName());
-					if (!player.hasPermission("fmob.order.tp")) {
+					if (!player.hasPermission("tmob.order.tp")) {
 						player.sendMessage(ChatColor.RED + "You do not have permission");
 						return true;
 					}
-					for (TownyMob fmob : plugin.playerSelections.get(player.getName())) {
-						fmob.setOrder("home");
-						Location loc = fmob.getSpawn();
-						fmob.setPosition(loc.getX(), loc.getY(), loc.getZ());
-						fmob.setPoi(loc.getX(), loc.getY(), loc.getZ());
+					for (TownyMob tmob : plugin.playerSelections.get(player.getName())) {
+						tmob.setOrder("home");
+						Location loc = tmob.getSpawn();
+						tmob.setPosition(loc.getX(), loc.getY(), loc.getZ());
+						tmob.setPoi(loc.getX(), loc.getY(), loc.getZ());
 					}
 					player.sendMessage(ChatColor.GREEN + "Your mobs are now back at their home");
 					return true;
 				} else if (split[1].equalsIgnoreCase("tpHere")) {
 					plugin.mobLeader.put(player.getName(), true);
-					if (!player.hasPermission("fmob.order.tp")) {
+					if (!player.hasPermission("tmob.order.tp")) {
 						player.sendMessage(ChatColor.RED + "You do not have permission");
 						return true;
 					}
 					Location loc = player.getLocation();
 					int count = 0;
-					for (TownyMob fmob : plugin.playerSelections.get(player.getName())) {
-						if (fmob.getSpawn().getWorld().equals(loc.getWorld())) {
+					for (TownyMob tmob : plugin.playerSelections.get(player.getName())) {
+						if (tmob.getSpawn().getWorld().equals(loc.getWorld())) {
 							double tmpX = (1.5-(count%4))*1.5;
 							double tmpZ = ((-1.) - Math.floor(count / 4.))*1.5;
 							double tmpH = Math.hypot(tmpX, tmpZ);
 							double angle = Math.atan2(tmpZ, tmpX) + (loc.getYaw() * Math.PI / 180.);
 							tmpX = loc.getX() + tmpH*Math.cos(angle);
 							tmpZ = loc.getZ() + tmpH*Math.sin(angle);
-							fmob.setPoi(tmpX, loc.getY(), tmpZ);
-							fmob.setPosition(tmpX, loc.getY(), tmpZ);
-							fmob.setOrder("poi");
+							tmob.setPoi(tmpX, loc.getY(), tmpZ);
+							tmob.setPosition(tmpX, loc.getY(), tmpZ);
+							tmob.setOrder("poi");
 							count++;
 						} else {
-							player.sendMessage(String.format("%s%s is on a different world", ChatColor.RED, fmob.getTypeName()));
+							player.sendMessage(String.format("%s%s is on a different world", ChatColor.RED, tmob.getTypeName()));
 						}
 					}
 					player.sendMessage("Your mobs are now with you");
 					return true;
 				} else if (split[1].equalsIgnoreCase("forgive")) {
-					for (TownyMob fmob : plugin.playerSelections.get(player.getName())) {
-						fmob.clearAttackedBy();
+					for (TownyMob tmob : plugin.playerSelections.get(player.getName())) {
+						tmob.clearAttackedBy();
 					}
 				} else {
 					player.sendMessage(ChatColor.RED + "Unrecognized order");
