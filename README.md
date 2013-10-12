@@ -1,13 +1,11 @@
 Information can be found at
-http://dev.bukkit.org/server-mods/faction-mobs/
+http://dev.bukkit.org/server-mods/towny-mobs/
 
 
 This code requires the following External JARs as Libraries:
 
 CraftBukkit - http://dl.bukkit.org/downloads/craftbukkit/list/rb/
 
-Factions - http://dev.bukkit.org/server-mods/factions/
-
-MCore (required for Factions) - http://dev.bukkit.org/server-mods/mcore/
+Towny - http://palmergames.com/towny/
 
 Vault - http://dev.bukkit.org/server-mods/vault/
