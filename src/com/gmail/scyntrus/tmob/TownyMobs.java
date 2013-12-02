@@ -193,9 +193,9 @@ public class TownyMobs extends JavaPlugin {
 	        fieldG.setAccessible(true);
 	        
 	        mapC = (Map) fieldC.get(null);
-	        mapD = (Map) fieldC.get(null);
-	        mapF = (Map) fieldC.get(null);
-	        mapG = (Map) fieldC.get(null);
+	        mapD = (Map) fieldD.get(null);
+	        mapF = (Map) fieldF.get(null);
+	        mapG = (Map) fieldG.get(null);
 	    	
 	    	addEntityType(Archer.class, Archer.typeName, modelNum);
 	    	addEntityType(Swordsman.class, Swordsman.typeName, modelNum);

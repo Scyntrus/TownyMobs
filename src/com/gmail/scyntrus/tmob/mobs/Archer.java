@@ -115,9 +115,9 @@ public class Archer extends EntitySkeleton implements TownyMob {
 	}
 	
 	@Override
-	public void c() { //TODO: Update name on version change
+	public void e() { //TODO: Update name on version change
 		int tmpFire = this.fireTicks;
-		super.c();
+		super.e();
 		this.fireTicks = tmpFire;
 		if (this.getEquipment(4) != null) {
 			this.getEquipment(4).setData(0);
@@ -135,7 +135,7 @@ public class Archer extends EntitySkeleton implements TownyMob {
 				}
 			}
 			if (this.getGoalTarget() == null) {
-				if (this.order.equals("home") || this.order == null || this.order.equals("")) {
+				if (this.order == null || this.order.equals("home") || this.order.equals("")) {
 					this.getNavigation().a(this.spawnLoc.getX(), this.spawnLoc.getY(), this.spawnLoc.getZ(), TownyMobs.mobSpeed);
 					this.order = "home";
 					return;

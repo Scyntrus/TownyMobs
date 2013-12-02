@@ -112,8 +112,8 @@ public class Titan extends EntityIronGolem implements TownyMob {
 	}
 
 	@Override
-	public void c() {
-		super.c();
+	public void e() {
+		super.e();
 		if (this.inWater) {
 			this.motY += .1;
 		}
@@ -130,7 +130,7 @@ public class Titan extends EntityIronGolem implements TownyMob {
 				}
 			}
 			if (this.getGoalTarget() == null) {
-				if (this.order.equals("home") || this.order == null || this.order.equals("")) {
+				if (this.order == null || this.order.equals("home") || this.order.equals("")) {
 					this.getNavigation().a(this.spawnLoc.getX(), this.spawnLoc.getY(), this.spawnLoc.getZ(), TownyMobs.mobSpeed);
 					this.order = "home";
 					return;

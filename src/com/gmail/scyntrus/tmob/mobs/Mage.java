@@ -114,8 +114,8 @@ public class Mage extends EntityWitch implements TownyMob {
 	}
 
 	@Override
-	public void c() {
-		super.c();
+	public void e() {
+		super.e();
 		if (--retargetTime < 0) {
 			retargetTime = 20;
 			if (this.getGoalTarget() == null || !this.getGoalTarget().isAlive()) {
@@ -129,7 +129,7 @@ public class Mage extends EntityWitch implements TownyMob {
 				}
 			}
 			if (this.getGoalTarget() == null) {
-				if (this.order.equals("home") || this.order == null || this.order.equals("")) {
+				if (this.order == null || this.order.equals("home") || this.order.equals("")) {
 					this.getNavigation().a(spawnLoc.getX(), spawnLoc.getY(), spawnLoc.getZ(), TownyMobs.mobSpeed);
 					this.order = "home";
 					return;
