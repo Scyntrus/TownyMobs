@@ -138,6 +138,7 @@ public class TownyMobs extends JavaPlugin {
 		TownyMobs.attackZombies = config.getBoolean("attackZombies", TownyMobs.attackZombies);
 		TownyMobs.mobSpeed = (float) config.getDouble("mobSpeed", TownyMobs.mobSpeed);
 		TownyMobs.mobPatrolSpeed = (float) config.getDouble("mobPatrolSpeed", TownyMobs.mobPatrolSpeed);
+		TownyMobs.mobPatrolSpeed = TownyMobs.mobPatrolSpeed / TownyMobs.mobSpeed;
 		TownyMobs.mobNavRange = (float) config.getDouble("mobNavRange", TownyMobs.mobNavRange);
 		TownyMobs.excludeFromKillCommands = config.getBoolean("excludeFromKillCommands", TownyMobs.excludeFromKillCommands);
 		TownyMobs.runKeepAliveTask = config.getBoolean("runKeepAliveTask", TownyMobs.runKeepAliveTask);

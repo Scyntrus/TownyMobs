@@ -81,7 +81,7 @@ public class Swordsman extends EntitySkeleton implements TownyMob {
 	    this.fireProof = false;
 	    this.canPickUpLoot = false;
 	    this.moveSpeed = TownyMobs.mobSpeed;
-	    getAttributeInstance(GenericAttributes.d).setValue(1.0);
+	    getAttributeInstance(GenericAttributes.d).setValue(this.moveSpeed);
 	    getAttributeInstance(GenericAttributes.a).setValue(maxHp);
 	    if (damage > 0) getAttributeInstance(GenericAttributes.e).setValue(damage);
 	    this.setHealth(maxHp);
@@ -108,9 +108,9 @@ public class Swordsman extends EntitySkeleton implements TownyMob {
 	    } catch (Exception e) {
 	    }
 	    this.goalSelector.a(1, new PathfinderGoalFloat(this));
-	    this.goalSelector.a(2, new PathfinderGoalMeleeAttack(this, this.moveSpeed, true));
-	    this.goalSelector.a(3, new PathfinderGoalMoveTowardsTarget(this, this.moveSpeed, (float) range));
-	    this.goalSelector.a(4, new PathfinderGoalRandomStroll(this, this.moveSpeed));
+	    this.goalSelector.a(2, new PathfinderGoalMeleeAttack(this, 1.0, true));
+	    this.goalSelector.a(3, new PathfinderGoalMoveTowardsTarget(this, 1.0, (float) range));
+	    this.goalSelector.a(4, new PathfinderGoalRandomStroll(this, 1.0));
 	    this.goalSelector.a(5, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
 	    this.goalSelector.a(5, new PathfinderGoalRandomLookaround(this));
 	    this.getBukkitEntity().setMetadata("CustomEntity", new FixedMetadataValue(TownyMobs.instance, true));
@@ -138,11 +138,11 @@ public class Swordsman extends EntitySkeleton implements TownyMob {
 			}
 			if (this.getGoalTarget() == null) {
 				if (this.order == null || this.order.equals("home") || this.order.equals("")) {
-					this.getNavigation().a(this.spawnLoc.getX(), this.spawnLoc.getY(), this.spawnLoc.getZ(), TownyMobs.mobSpeed);
+					this.getNavigation().a(this.spawnLoc.getX(), this.spawnLoc.getY(), this.spawnLoc.getZ(), 1.0);
 					this.order = "home";
 					return;
 				} else if (this.order.equals("poi")) {
-					this.getNavigation().a(this.poiX, this.poiY, this.poiZ, TownyMobs.mobSpeed);
+					this.getNavigation().a(this.poiX, this.poiY, this.poiZ, 1.0);
 					return;
 				} else if (this.order.equals("wander")) {
 					return;
@@ -159,7 +159,7 @@ public class Swordsman extends EntitySkeleton implements TownyMob {
 					}
 					return;
 				} else if (this.order.equals("path")) {
-					this.getNavigation().a(poiX, poiY, poiZ, TownyMobs.mobPatrolSpeed);
+					this.getNavigation().a(poiX, poiY, poiZ, 1.0);
 					if (Utils.dist3D(this.locX,this.poiX,this.locY,this.poiY,this.locZ,this.poiZ) < 1) {
 						this.order = "home";
 					}
