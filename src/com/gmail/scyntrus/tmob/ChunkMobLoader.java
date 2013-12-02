@@ -16,7 +16,7 @@ public class ChunkMobLoader implements Runnable {
 		if (TownyMobs.scheduleChunkMobLoad) {
 			TownyMobs.scheduleChunkMobLoad = false;
 			for (TownyMob tmob : TownyMobs.mobList) {
-	 			if (!((WorldServer) tmob.getEntity().world).getTracker().trackedEntities.b(tmob.getEntity().id)) {
+	 			if (!((WorldServer) tmob.getEntity().world).getTracker().trackedEntities.b(tmob.getEntity().getId())) {
 					try	{
 						tmob.getEntity().world.addEntity(tmob.getEntity(), SpawnReason.CUSTOM);
 					} catch (Exception ex) {}

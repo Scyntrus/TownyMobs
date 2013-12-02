@@ -3,6 +3,7 @@ package com.gmail.scyntrus.tmob.mobs;
 import java.lang.reflect.Field;
 
 import net.minecraft.server.v1_7_R1.AttributeInstance;
+import net.minecraft.server.v1_7_R1.Block;
 import net.minecraft.server.v1_7_R1.DamageSource;
 import net.minecraft.server.v1_7_R1.Entity;
 import net.minecraft.server.v1_7_R1.EntityHuman;
@@ -81,7 +82,7 @@ public class Mage extends EntityWitch implements TownyMob {
 	    getAttributeInstance(GenericAttributes.d).setValue(1.0);
 	    getAttributeInstance(GenericAttributes.a).setValue(maxHp);
 	    this.setHealth(maxHp);
-	    this.Y = 1.5F;
+	    this.X = 1.5F;
 	    this.getNavigation().a(false);
 	    this.getNavigation().b(false);
 	    this.getNavigation().c(true);
@@ -95,7 +96,7 @@ public class Mage extends EntityWitch implements TownyMob {
 			e.setValue(TownyMobs.mobNavRange);
 		} catch (Exception e) {
 		}
-		this.setEquipment(0, new ItemStack(Item.POTION, 1, 8204));
+		this.setEquipment(0, new ItemStack((Item)Item.REGISTRY.a("potion"), 1, 8204));
 	    try {
 	    	 
 	    	Field gsa = PathfinderGoalSelector.class.getDeclaredField("a");
@@ -349,22 +350,22 @@ public class Mage extends EntityWitch implements TownyMob {
 	}
 
 	@Override
-	protected String r() {
+	protected String t() {
 	    return TownyMobs.sndBreath;
 	}
 
 	@Override
-	protected String aO() {
+	protected String aT() {
 	    return TownyMobs.sndHurt;
 	}
 
 	@Override
-	protected String aP() {
+	protected String aU() {
 	    return TownyMobs.sndDeath;
 	}
 
 	@Override
-	protected void a(int i, int j, int k, int l) {
+	protected void a(int i, int j, int k, Block block) {
 	    makeSound(TownyMobs.sndStep, 0.15F, 1.0F);
 	}
 

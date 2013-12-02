@@ -3,6 +3,7 @@ package com.gmail.scyntrus.tmob.mobs;
 import java.lang.reflect.Field;
 
 import net.minecraft.server.v1_7_R1.AttributeInstance;
+import net.minecraft.server.v1_7_R1.Block;
 import net.minecraft.server.v1_7_R1.DamageSource;
 import net.minecraft.server.v1_7_R1.Entity;
 import net.minecraft.server.v1_7_R1.EntityHuman;
@@ -84,7 +85,7 @@ public class Swordsman extends EntitySkeleton implements TownyMob {
 	    getAttributeInstance(GenericAttributes.a).setValue(maxHp);
 	    if (damage > 0) getAttributeInstance(GenericAttributes.e).setValue(damage);
 	    this.setHealth(maxHp);
-	    this.Y = 1.5F;
+	    this.X = 1.5F;
 	    this.getNavigation().a(false);
 	    this.getNavigation().b(false);
 	    this.getNavigation().c(true);
@@ -97,7 +98,7 @@ public class Swordsman extends EntitySkeleton implements TownyMob {
 			e.setValue(TownyMobs.mobNavRange);
 		} catch (Exception e) {
 		}
-	    this.setEquipment(0, new ItemStack(Item.IRON_SWORD));
+	    this.setEquipment(0, new ItemStack((Item)Item.REGISTRY.a("iron_sword")));
 	    try {
 	    	 
 	    	Field gsa = PathfinderGoalSelector.class.getDeclaredField("a");
@@ -357,22 +358,22 @@ public class Swordsman extends EntitySkeleton implements TownyMob {
 	}
 
 	@Override
-	protected String r() {
+	protected String t() {
 	    return TownyMobs.sndBreath;
 	}
 
 	@Override
-	protected String aO() {
+	protected String aT() {
 	    return TownyMobs.sndHurt;
 	}
 
 	@Override
-	protected String aP() {
+	protected String aU() {
 	    return TownyMobs.sndDeath;
 	}
 
 	@Override
-	protected void a(int i, int j, int k, int l) {
+	protected void a(int i, int j, int k, Block block) {
 	    makeSound(TownyMobs.sndStep, 0.15F, 1.0F);
 	}
 
@@ -474,11 +475,6 @@ public class Swordsman extends EntitySkeleton implements TownyMob {
 			this.setTarget(null);
 		}
 		this.attackedBy = null;
-	}
-	
-	@Override
-	public boolean bD() {
-		return false;
 	}
 	
 	@Override
