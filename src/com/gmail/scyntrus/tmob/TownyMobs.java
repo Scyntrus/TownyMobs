@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.Method;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,11 +14,7 @@ import java.util.Map;
 
 import net.milkbowl.vault.economy.Economy;
 import net.minecraft.server.v1_7_R1.Entity;
-import net.minecraft.server.v1_7_R1.EntityIronGolem;
-import net.minecraft.server.v1_7_R1.EntityPigZombie;
-import net.minecraft.server.v1_7_R1.EntitySkeleton;
 import net.minecraft.server.v1_7_R1.EntityTypes;
-import net.minecraft.server.v1_7_R1.EntityZombie;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -81,7 +77,17 @@ public class TownyMobs extends JavaPlugin {
 	public static boolean excludeFromKillCommands = true;
 	public static boolean runKeepAliveTask = true;
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
+	private Map mapC;
+	@SuppressWarnings("rawtypes")
+	private Map mapD;
+	@SuppressWarnings("rawtypes")
+	private Map mapF;
+	@SuppressWarnings("rawtypes")
+	private Map mapG;
+	
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void onEnable() {
 		TownyMobs.instance = this;
 		this.saveDefaultConfig();
@@ -177,20 +183,24 @@ public class TownyMobs extends JavaPlugin {
 		
 		this.pm = this.getServer().getPluginManager();
 	    try {
-	    	Method method = EntityTypes.class.getDeclaredMethod("a", new Class[] {Class.class, String.class, int.class});
-	    	method.setAccessible(true);
+	    	Field fieldC = EntityTypes.class.getDeclaredField("c");
+	        fieldC.setAccessible(true);
+	    	Field fieldD = EntityTypes.class.getDeclaredField("d");
+	        fieldD.setAccessible(true);
+	    	Field fieldF = EntityTypes.class.getDeclaredField("f");
+	        fieldF.setAccessible(true);
+	    	Field fieldG = EntityTypes.class.getDeclaredField("g");
+	        fieldG.setAccessible(true);
+	        
+	        mapC = (Map) fieldC.get(null);
+	        mapD = (Map) fieldC.get(null);
+	        mapF = (Map) fieldC.get(null);
+	        mapG = (Map) fieldC.get(null);
 	    	
-	    	method.invoke(EntityTypes.class, Archer.class, Archer.typeName, modelNum);
-	    	method.invoke(EntityTypes.class, Swordsman.class, Swordsman.typeName, modelNum);
-	    	method.invoke(EntityTypes.class, Mage.class, Mage.typeName, modelNum);
-	    	method.invoke(EntityTypes.class, Titan.class, Titan.typeName, 99);
-	    	
-	    	//Make sure I don't override original classes
-	    	
-	    	method.invoke(EntityTypes.class, EntitySkeleton.class, "Skeleton", 51);
-	    	method.invoke(EntityTypes.class, EntityZombie.class, "Zombie", 54);
-	    	method.invoke(EntityTypes.class, EntityPigZombie.class, "PigZombie", 57);
-	    	method.invoke(EntityTypes.class, EntityIronGolem.class, "VillagerGolem", 99);
+	    	addEntityType(Archer.class, Archer.typeName, modelNum);
+	    	addEntityType(Swordsman.class, Swordsman.typeName, modelNum);
+	    	addEntityType(Mage.class, Mage.typeName, modelNum);
+	    	addEntityType(Titan.class, Titan.typeName, 99);
 	    	
 	    } catch (Exception e) {
         	this.getLogger().severe("[Fatal Error] Unable to register mobs");
@@ -250,6 +260,14 @@ public class TownyMobs extends JavaPlugin {
 		this.loadMobList();
 		if (runKeepAliveTask) this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new DeadChecker(this), 1, 1);
         chunkMobLoadTask = this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new ChunkMobLoader(this), 4, 4);
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private void addEntityType(Class paramClass, String paramString, int paramInt) {
+	    mapC.put(paramString, paramClass);
+	    mapD.put(paramClass, paramString);
+	    mapF.put(paramClass, Integer.valueOf(paramInt));
+	    mapG.put(paramString, Integer.valueOf(paramInt));
 	}
 	
 	public void onDisable() {
