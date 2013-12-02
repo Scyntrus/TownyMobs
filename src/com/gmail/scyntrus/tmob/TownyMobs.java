@@ -13,12 +13,12 @@ import java.util.List;
 import java.util.Map;
 
 import net.milkbowl.vault.economy.Economy;
-import net.minecraft.server.v1_6_R3.Entity;
-import net.minecraft.server.v1_6_R3.EntityIronGolem;
-import net.minecraft.server.v1_6_R3.EntityPigZombie;
-import net.minecraft.server.v1_6_R3.EntitySkeleton;
-import net.minecraft.server.v1_6_R3.EntityTypes;
-import net.minecraft.server.v1_6_R3.EntityZombie;
+import net.minecraft.server.v1_7_R1.Entity;
+import net.minecraft.server.v1_7_R1.EntityIronGolem;
+import net.minecraft.server.v1_7_R1.EntityPigZombie;
+import net.minecraft.server.v1_7_R1.EntitySkeleton;
+import net.minecraft.server.v1_7_R1.EntityTypes;
+import net.minecraft.server.v1_7_R1.EntityZombie;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -90,7 +90,7 @@ public class TownyMobs extends JavaPlugin {
     	this.saveConfig();
     	
     	try {
-    	    Class.forName("org.bukkit.craftbukkit.v1_6_R3.entity.CraftEntity");
+    	    Class.forName("org.bukkit.craftbukkit.v1_7_R1.entity.CraftEntity");
     	} catch(Exception e) {
     	    System.out.println("[TownyMobs] You are running an unsupported version of CraftBukkit (requires 1.6.4). TownyMobs will not be enabled.");
     	    this.getCommand("tm").setExecutor(new ErrorCommand(this));

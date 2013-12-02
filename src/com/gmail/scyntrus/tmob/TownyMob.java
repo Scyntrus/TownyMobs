@@ -1,8 +1,8 @@
 package com.gmail.scyntrus.tmob;
 
-import net.minecraft.server.v1_6_R3.Entity;
-import net.minecraft.server.v1_6_R3.EntityLiving;
-import net.minecraft.server.v1_6_R3.ItemStack;
+import net.minecraft.server.v1_7_R1.Entity;
+import net.minecraft.server.v1_7_R1.EntityLiving;
+import net.minecraft.server.v1_7_R1.ItemStack;
 
 import org.bukkit.Location;
 
