@@ -98,7 +98,7 @@ public class TownyMobs extends JavaPlugin {
     	try {
     	    Class.forName("org.bukkit.craftbukkit.v1_7_R1.entity.CraftEntity");
     	} catch(Exception e) {
-    	    System.out.println("[TownyMobs] You are running an unsupported version of CraftBukkit (requires 1.6.4). TownyMobs will not be enabled.");
+    	    System.out.println("[TownyMobs] You are running an unsupported version of CraftBukkit (requires v1_7_R1). TownyMobs will not be enabled.");
     	    this.getCommand("tm").setExecutor(new ErrorCommand(this));
     	    this.getCommand("tmc").setExecutor(new ErrorCommand(this));
     	    return;
