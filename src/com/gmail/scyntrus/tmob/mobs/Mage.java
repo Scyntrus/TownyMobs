@@ -71,10 +71,6 @@ public class Mage extends EntityWitch implements TownyMob {
 		this.setSpawn(spawnLoc);
 		this.setTown(town);
 		Utils.giveColorArmor(this);
-		if (TownyMobs.displayMobTown) {
-			this.setCustomName(ChatColor.YELLOW + this.townName + " " + typeName);
-			this.setCustomNameVisible(true);
-		}
 	    this.persistent = true;
 	    this.fireProof = false;
 	    this.canPickUpLoot = false;
@@ -277,10 +273,14 @@ public class Mage extends EntityWitch implements TownyMob {
 		return this.town;
 	}
 
-	private void setTown(Town town) {
+	public void setTown(Town town) {
 		this.town = town;
 		if (town == null) die();
 		this.townName = new String(town.getName());
+		if (TownyMobs.displayMobTown) {
+			this.setCustomName(ChatColor.YELLOW + this.townName + " " + typeName);
+			this.setCustomNameVisible(true);
+		}
 	}
 	
 	@Override

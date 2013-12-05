@@ -213,8 +213,11 @@ public class TownyMobs extends JavaPlugin {
 	    if (config.getBoolean("tmcEnabled", false)) {
 		    this.getCommand("tmc").setExecutor(new TmcCommand(this));
 	    }
+	    
 	    this.pm.registerEvents(new EntityListener(this), this);
 	    this.pm.registerEvents(new CommandListener(this), this);
+	    this.pm.registerEvents(new RenameListener(this), this);
+	    
 	    File colorFile = new File(getDataFolder(), "colors.dat");
 	    if (colorFile.exists()){
 			try {

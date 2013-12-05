@@ -39,4 +39,5 @@ public interface TownyMob {
 	public void clearAttackedBy();
 	public int getDrops();
 	public boolean softAgro(Entity entity);
+	public void setTown(Town town);
 }

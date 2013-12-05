@@ -69,10 +69,6 @@ public class Titan extends EntityIronGolem implements TownyMob {
 		super(((CraftWorld) spawnLoc.getWorld()).getHandle());
 		this.setSpawn(spawnLoc);
 		this.setTown(town2);
-		if (TownyMobs.displayMobTown) {
-			this.setCustomName(ChatColor.YELLOW + this.townName + " " + typeName);
-			this.setCustomNameVisible(true);
-		}
 	    this.persistent = true;
 	    this.fireProof = false;
 	    this.canPickUpLoot = false;
@@ -278,10 +274,14 @@ public class Titan extends EntityIronGolem implements TownyMob {
 		return this.town;
 	}
 
-	private void setTown(Town town) {
+	public void setTown(Town town) {
 		this.town = town;
 		if (town == null) die();
 		this.townName = new String(town.getName());
+		if (TownyMobs.displayMobTown) {
+			this.setCustomName(ChatColor.YELLOW + this.townName + " " + typeName);
+			this.setCustomNameVisible(true);
+		}
 	}
 	
 	@Override
