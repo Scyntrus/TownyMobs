@@ -1,5 +1,6 @@
 package com.gmail.scyntrus.tmob;
 
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import com.palmergames.bukkit.towny.event.RenameTownEvent;
@@ -13,6 +14,7 @@ public class RenameListener implements Listener {
 		this.plugin = plugin;
 	}
 
+	@EventHandler
 	public void onTownRename(RenameTownEvent e) {
 		String oldName = e.getOldName();
 		Town town = e.getTown();
