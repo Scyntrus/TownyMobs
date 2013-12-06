@@ -261,7 +261,7 @@ public class Mage extends EntityWitch implements TownyMob {
 	public Town getTown() {
 		if (this.town == null) {
 			try {
-				this.town = TownyUniverse.getDataSource().getTown(this.townName);
+				this.setTown(TownyUniverse.getDataSource().getTown(this.townName));
 			} catch (NotRegisteredException e) {
 				this.die();
 			}
@@ -313,7 +313,7 @@ public class Mage extends EntityWitch implements TownyMob {
 			this.findTarget();
 		}
 		try {
-			this.town = TownyUniverse.getDataSource().getTown(this.townName);
+			this.setTown(TownyUniverse.getDataSource().getTown(this.townName));
 		} catch (NotRegisteredException e) {
 			this.die();
 		}

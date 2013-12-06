@@ -13,7 +13,7 @@ public class RenameListener implements Listener {
 		this.plugin = plugin;
 	}
 
-	public void onTownRenameEvent(RenameTownEvent e) {
+	public void onTownRename(RenameTownEvent e) {
 		String oldName = e.getOldName();
 		Town town = e.getTown();
 		for (TownyMob tmob : TownyMobs.mobList) {

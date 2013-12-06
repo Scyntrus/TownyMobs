@@ -262,7 +262,7 @@ public class Titan extends EntityIronGolem implements TownyMob {
 	public Town getTown() {
 		if (this.town == null) {
 			try {
-				this.town = TownyUniverse.getDataSource().getTown(this.townName);
+				this.setTown(TownyUniverse.getDataSource().getTown(this.townName));
 			} catch (NotRegisteredException e) {
 				this.die();
 			}
@@ -314,7 +314,7 @@ public class Titan extends EntityIronGolem implements TownyMob {
 			this.findTarget();
 		}
 		try {
-			this.town = TownyUniverse.getDataSource().getTown(this.townName);
+			this.setTown(TownyUniverse.getDataSource().getTown(this.townName));
 		} catch (NotRegisteredException e) {
 			this.die();
 		}
