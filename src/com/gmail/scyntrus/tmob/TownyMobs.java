@@ -141,7 +141,6 @@ public class TownyMobs extends JavaPlugin {
 		TownyMobs.mobPatrolSpeed = TownyMobs.mobPatrolSpeed / TownyMobs.mobSpeed;
 		TownyMobs.mobNavRange = (float) config.getDouble("mobNavRange", TownyMobs.mobNavRange);
 		TownyMobs.excludeFromKillCommands = config.getBoolean("excludeFromKillCommands", TownyMobs.excludeFromKillCommands);
-		TownyMobs.runKeepAliveTask = config.getBoolean("runKeepAliveTask", TownyMobs.runKeepAliveTask);
 		if (runKeepAliveTask) excludeFromKillCommands = false;
 
 		TownyMobs.feedEnabled = config.getBoolean("feedEnabled", TownyMobs.feedEnabled);
@@ -262,6 +261,9 @@ public class TownyMobs extends JavaPlugin {
 		}
         
 		this.loadMobList();
+		
+		TownyMobs.runKeepAliveTask = config.getBoolean("runKeepAliveTask", TownyMobs.runKeepAliveTask);
+		
 		if (runKeepAliveTask) this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new DeadChecker(this), 1, 1);
         chunkMobLoadTask = this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new ChunkMobLoader(this), 4, 4);
 	}
@@ -391,7 +393,18 @@ public class TownyMobs extends JavaPlugin {
 					newMob.setOrder("poi");
 				}
 				
-				newMob.getEntity().world.addEntity((Entity) newMob, SpawnReason.CUSTOM);
+				if (!newMob.getEntity().world.addEntity((Entity) newMob, SpawnReason.CUSTOM)) {
+					System.out.println("Unable to respawn a Towny Mob.");
+					if (!backup) {
+						backup = true;
+						try {
+							conf.save(new File(getDataFolder(), "data_backup.dat"));
+							System.out.println("Backup file saved as data_backup.dat");
+						} catch (IOException e) {
+							System.out.println("Failed to save backup file");
+						}
+					}
+				}
 				mobList.add(newMob);
 				newMob.getEntity().dead = false;
 			}
