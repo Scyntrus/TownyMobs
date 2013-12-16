@@ -76,9 +76,6 @@ public class TownyMobs extends JavaPlugin {
 	public static boolean feedEnabled = true;
 	public static float feedAmount = 5;
 	
-	public static boolean excludeFromKillCommands = true;
-	public static boolean runKeepAliveTask = true;
-	
 	@SuppressWarnings("rawtypes")
 	private Map mapC;
 	@SuppressWarnings("rawtypes")
@@ -155,8 +152,6 @@ public class TownyMobs extends JavaPlugin {
 		TownyMobs.mobPatrolSpeed = (float) config.getDouble("mobPatrolSpeed", TownyMobs.mobPatrolSpeed);
 		TownyMobs.mobPatrolSpeed = TownyMobs.mobPatrolSpeed / TownyMobs.mobSpeed;
 		TownyMobs.mobNavRange = (float) config.getDouble("mobNavRange", TownyMobs.mobNavRange);
-		TownyMobs.excludeFromKillCommands = config.getBoolean("excludeFromKillCommands", TownyMobs.excludeFromKillCommands);
-		if (runKeepAliveTask) excludeFromKillCommands = false;
 
 		TownyMobs.feedEnabled = config.getBoolean("feedEnabled", TownyMobs.feedEnabled);
 		TownyMobs.feedAmount = (float) config.getDouble("feedAmount", TownyMobs.feedAmount);
@@ -277,9 +272,6 @@ public class TownyMobs extends JavaPlugin {
         
 		this.loadMobList();
 		
-		TownyMobs.runKeepAliveTask = config.getBoolean("runKeepAliveTask", TownyMobs.runKeepAliveTask);
-		
-		if (runKeepAliveTask) this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new DeadChecker(this), 1, 1);
         chunkMobLoadTask = this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new ChunkMobLoader(this), 4, 4);
 	}
 	

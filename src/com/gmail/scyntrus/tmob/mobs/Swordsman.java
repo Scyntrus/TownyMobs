@@ -88,7 +88,7 @@ public class Swordsman extends EntitySkeleton implements TownyMob {
 	    this.getNavigation().d(false);
 	    this.getNavigation().e(true);
 	    try {
-			Field field = Navigation.class.getDeclaredField("e"); //TODO: Update name on version change
+			Field field = Navigation.class.getDeclaredField("e");
 			field.setAccessible(true);
 			AttributeInstance e = (AttributeInstance) field.get(this.getNavigation());
 			e.setValue(TownyMobs.mobNavRange);
@@ -502,5 +502,14 @@ public class Swordsman extends EntitySkeleton implements TownyMob {
 	@Override
 	public void setHealth(float f) {
 		this.datawatcher.watch(6, Float.valueOf(MathHelper.a(f, 0.0F, maxHp)));
+	}
+	
+	@Override
+	public void h() {
+		if (this.getHealth() > 0) {
+			this.dead = false;
+		}
+		this.ao = false;
+		super.h();
 	}
 }
