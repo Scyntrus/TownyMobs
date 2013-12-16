@@ -55,7 +55,7 @@ public class Swordsman extends EntitySkeleton implements TownyMob {
 	public static double powerCost = 0;
 	public static double moneyCost = 0;
 	public static double range = 16;
-	public static int damage = 0;
+	public static double damage = 0;
 	public static int drops = 0;
 	private int retargetTime = 0;
 	private double moveSpeed;

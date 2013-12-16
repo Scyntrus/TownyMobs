@@ -79,7 +79,7 @@ public class TmcCommand implements CommandExecutor {
 			newMob = new Swordsman(loc, town);
 		} else if (split[0].equalsIgnoreCase("Titan") || split[0].equalsIgnoreCase("Golem")) {
 			newMob = new Titan(loc, town);
-		} else if (split[0].equalsIgnoreCase("Mage")) {
+		} else if (split[0].equalsIgnoreCase("Mage") || split[0].equalsIgnoreCase("Witch")) {
 			newMob = new Mage(loc, town);
 		} else {
 			sender.sendMessage("Unrecognized mob name");

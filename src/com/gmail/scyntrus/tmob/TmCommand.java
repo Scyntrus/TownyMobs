@@ -192,7 +192,7 @@ public class TmCommand implements CommandExecutor {
 						return false;
 					}
 					newMob = new Titan(player.getLocation(), playertown);
-				} else if (split[1].equalsIgnoreCase("Mage")) {
+				} else if (split[1].equalsIgnoreCase("Mage") || split[1].equalsIgnoreCase("Witch")) {
 					if (!player.hasPermission("tmob.spawn") && !player.hasPermission("tmob.spawn.mage")) {
 						player.sendMessage(ChatColor.RED + "You do not have permission to spawn this mob.");
 						return false;
