@@ -469,4 +469,8 @@ public class TownyMobs extends JavaPlugin {
 			mobList.get(i).updateMob();
 		}
 	}
+	
+	public static final String signature_Author = "Scyntrus";
+	public static final String signature_URL = "http://dev.bukkit.org/bukkit-plugins/towny-mobs/";
+	public static final String signature_Source = "http://github.com/Scyntrus/TownyMobs";
 }

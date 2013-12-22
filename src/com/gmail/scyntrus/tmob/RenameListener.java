@@ -15,7 +15,7 @@ public class RenameListener implements Listener {
 		this.plugin = plugin;
 	}
 
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onTownRename(RenameTownEvent e) {
 		String oldName = e.getOldName();
 		Town town = e.getTown();

@@ -157,11 +157,12 @@ public class EntityListener implements Listener {
         	}
         }, 1L);
 	}
-	
-	@EventHandler
+
+	@EventHandler(priority=EventPriority.HIGH, ignoreCancelled=true)
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
 		if (!(e.getEntity() instanceof CraftLivingEntity)) return;
 		CraftLivingEntity entity = (CraftLivingEntity) e.getEntity();
+		if (entity.getNoDamageTicks() > 0) return;
 		CraftEntity damager = (CraftEntity) e.getDamager();
 		if (damager instanceof Projectile) damager = (CraftEntity) ((Projectile) damager).getShooter();
 		if (damager == null) return;
@@ -190,6 +191,7 @@ public class EntityListener implements Listener {
 			if (Utils.TownCheck(((CraftPlayer) player).getHandle(), tmob.getTown()) >= 1) {
 				if (tmob.getTown().equals(TownyUniverse.getDataSource().getResident(player.getName()).getTown())) {
 					player.sendMessage(String.format("%sYou hit a friendly %s%s", ChatColor.YELLOW, ChatColor.RED, tmob.getTypeName()));
+					// disable gaining mcMMO exp when hitting friendly mobs
 					tmob.getEntity().getBukkitEntity().setMetadata("NPC", new FixedMetadataValue(plugin, true));
 					return;
 				} else {
@@ -276,7 +278,7 @@ public class EntityListener implements Listener {
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onPlayerMove(PlayerMoveEvent e) {
 		if (plugin.mobLeader.containsKey(e.getPlayer().getName()) && plugin.playerSelections.containsKey(e.getPlayer().getName())) {
 			if (e.getFrom().distance(e.getTo()) < 0.00001) {
@@ -298,7 +300,7 @@ public class EntityListener implements Listener {
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onPotionSplash(PotionSplashEvent e) {
 		if (e.getPotion().getShooter() == null) return;
 		if (((CraftEntity) e.getPotion().getShooter()).getHandle() instanceof TownyMob) {
@@ -320,7 +322,7 @@ public class EntityListener implements Listener {
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onEntityPortal(EntityPortalEvent e) {
 		if (((CraftEntity) e.getEntity()).getHandle() instanceof TownyMob) {
 			e.setCancelled(true);
