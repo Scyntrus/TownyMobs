@@ -19,6 +19,10 @@ attackZombies: true
 # Prevent mobs from damaging friendly players and mobs
 noFriendlyFire: true
 
+# Prevent players from damaging mobs on the same team
+# Players cannot damage mobs on allied teams regardless
+noPlayerFriendlyFire: true
+
 # Attacking a town resident or towny mob will agro their nearby towny mobs
 alertAllies: true
 

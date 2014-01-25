@@ -55,6 +55,7 @@ public class TownyMobs extends JavaPlugin {
 	public static int mobsPerTown = 0;
 	public static boolean attackMobs = true;
 	public static boolean noFriendlyFire = false;
+	public static boolean noPlayerFriendlyFire = false;
 	public static boolean displayMobTown = true;
 	public static boolean attackZombies = true;
 	public static boolean alertAllies = true;
@@ -144,6 +145,7 @@ public class TownyMobs extends JavaPlugin {
 		TownyMobs.spawnLimit = config.getInt("spawnLimit", TownyMobs.spawnLimit);
 		TownyMobs.mobsPerTown = config.getInt("mobsPerTown", TownyMobs.mobsPerTown);
 		TownyMobs.noFriendlyFire = config.getBoolean("noFriendlyFire", TownyMobs.noFriendlyFire);
+		TownyMobs.noPlayerFriendlyFire = config.getBoolean("noPlayerFriendlyFire", TownyMobs.noPlayerFriendlyFire);
 		TownyMobs.alertAllies = config.getBoolean("alertAllies", TownyMobs.alertAllies);
 		TownyMobs.displayMobTown = config.getBoolean("displayMobTown", TownyMobs.displayMobTown);
 		TownyMobs.attackMobs = config.getBoolean("attackMobs", TownyMobs.attackMobs);

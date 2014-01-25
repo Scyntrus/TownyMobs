@@ -190,6 +190,11 @@ public class EntityListener implements Listener {
 			try {
 			if (Utils.TownCheck(((CraftPlayer) player).getHandle(), tmob.getTown()) >= 1) {
 				if (tmob.getTown().equals(TownyUniverse.getDataSource().getResident(player.getName()).getTown())) {
+					if (TownyMobs.noPlayerFriendlyFire) {
+						player.sendMessage(String.format("%sYou cannot hit a friendly %s%s", ChatColor.YELLOW, ChatColor.RED, tmob.getTypeName()));
+						e.setCancelled(true);
+						return;
+					}
 					player.sendMessage(String.format("%sYou hit a friendly %s%s", ChatColor.YELLOW, ChatColor.RED, tmob.getTypeName()));
 					// disable gaining mcMMO exp when hitting friendly mobs
 					tmob.getEntity().getBukkitEntity().setMetadata("NPC", new FixedMetadataValue(plugin, true));
