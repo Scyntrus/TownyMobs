@@ -21,7 +21,6 @@ public interface TownyMob {
 	public boolean isAlive();
 	public float getHealth();
 	public void setHealth(float hp);
-	public void die();
 	public void setEquipment(int slot, ItemStack item);
 	public Boolean getEnabled();
 	public double getPowerCost();
@@ -40,4 +39,5 @@ public interface TownyMob {
 	public int getDrops();
 	public boolean softAgro(Entity entity);
 	public void setTown(Town town);
+	public void forceDie();
 }

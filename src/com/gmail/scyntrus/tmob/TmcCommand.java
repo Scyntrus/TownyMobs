@@ -88,7 +88,7 @@ public class TmcCommand implements CommandExecutor {
 		
 		if (!newMob.getEnabled()) {
 			sender.sendMessage(String.format("Spawning %s has been disabled", newMob.getTypeName()));
-			newMob.die();
+			newMob.forceDie();
 			return true;
 		}
 				

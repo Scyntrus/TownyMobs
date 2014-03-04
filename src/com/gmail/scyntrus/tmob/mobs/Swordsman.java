@@ -65,7 +65,7 @@ public class Swordsman extends EntitySkeleton implements TownyMob {
 	
 	public Swordsman(World world) {
 		super(world);
-		this.die();
+		this.forceDie();
 	}
 	
 	public Swordsman(Location spawnLoc, Town town2) {
@@ -272,11 +272,11 @@ public class Swordsman extends EntitySkeleton implements TownyMob {
 			try {
 				this.setTown(TownyUniverse.getDataSource().getTown(this.townName));
 			} catch (NotRegisteredException e) {
-				this.die();
+				this.forceDie();
 			}
 		}
 		if (this.town == null) {
-			this.die();
+			this.forceDie();
 			System.out.println("[Error] Found and removed townless town mob");
 		}
 		return this.town;
@@ -284,7 +284,7 @@ public class Swordsman extends EntitySkeleton implements TownyMob {
 
 	public void setTown(Town town) {
 		this.town = town;
-		if (town == null) die();
+		if (town == null) forceDie();
 		this.townName = new String(town.getName());
 		if (TownyMobs.displayMobTown) {
 			this.setCustomName(ChatColor.YELLOW + this.townName + " " + typeName);
@@ -324,10 +324,10 @@ public class Swordsman extends EntitySkeleton implements TownyMob {
 		try {
 			this.setTown(TownyUniverse.getDataSource().getTown(this.townName));
 		} catch (NotRegisteredException e) {
-			this.die();
+			this.forceDie();
 		}
 		if (this.town == null) {
-			this.die();
+			this.forceDie();
 			return;
 		}
 		Utils.giveColorArmor(this);
@@ -443,16 +443,24 @@ public class Swordsman extends EntitySkeleton implements TownyMob {
 	
 	@Override
 	public void die() {
-		super.die();
-		this.setHealth(0);
-		this.setEquipment(0, null);
-		this.setEquipment(1, null);
-		this.setEquipment(2, null);
-		this.setEquipment(3, null);
-		this.setEquipment(4, null);
-		if (TownyMobs.mobList.contains(this)) {
-			TownyMobs.mobList.remove(this);
+		if (this.getHealth() <= 0) {
+    		super.die();
+    		this.setHealth(0);
+    		this.setEquipment(0, null);
+    		this.setEquipment(1, null);
+    		this.setEquipment(2, null);
+    		this.setEquipment(3, null);
+    		this.setEquipment(4, null);
+    		if (TownyMobs.mobList.contains(this)) {
+    			TownyMobs.mobList.remove(this);
+    		}
 		}
+	}
+	
+	@Override
+	public void forceDie() {
+		this.setHealth(0);
+		this.die();
 	}
 
 	@Override
@@ -467,7 +475,7 @@ public class Swordsman extends EntitySkeleton implements TownyMob {
 	
 	@Override
 	public void f(NBTTagCompound nbttagcompound) {
-		this.die();
+		this.forceDie();
 	}
 
 	@Override

@@ -36,7 +36,7 @@ public class TownyListener implements Listener {
 		String townName = e.getTownName();
 		for (int i = TownyMobs.mobList.size()-1; i >= 0; i--) {
 			if (TownyMobs.mobList.get(i).getTownName().equals(townName)) {
-				TownyMobs.mobList.get(i).die();
+				TownyMobs.mobList.get(i).forceDie();
 			}
 		}
 	}

@@ -147,7 +147,7 @@ public class EntityListener implements Listener {
 	@EventHandler
 	public void onEntityDeath(EntityDeathEvent e) {
 		if (((CraftEntity) e.getEntity()).getHandle() instanceof TownyMob) {
-			((CraftEntity) e.getEntity()).getHandle().die();
+			((TownyMob) ((CraftEntity) e.getEntity()).getHandle()).forceDie();
 			e.getDrops().clear();
 			e.getDrops().add(new ItemStack(((TownyMob) ((CraftEntity) e.getEntity()).getHandle()).getDrops()));
 		}

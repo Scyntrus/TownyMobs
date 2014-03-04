@@ -204,7 +204,7 @@ public class TmCommand implements CommandExecutor {
 				}
 				if (!newMob.getEnabled()) {
 					player.sendMessage(String.format("%sSpawning %s has been disabled", ChatColor.RED, newMob.getTypeName()));
-					newMob.die();
+					newMob.forceDie();
 					return true;
 				}
 				
@@ -242,7 +242,7 @@ public class TmCommand implements CommandExecutor {
 					TownyMobs.mobList.add(newMob);
 					player.sendMessage(String.format("You have spawned a %s", newMob.getTypeName()));
 				} else {
-					newMob.die();
+					newMob.forceDie();
 					player.sendMessage(String.format("%sYou have failed to spawn a %s", ChatColor.RED, newMob.getTypeName()));
 					if (!player.hasPermission("tmob.bypass")) {
 						if (plugin.vaultEnabled && newMob.getMoneyCost() > 0) {
