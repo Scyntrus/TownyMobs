@@ -108,6 +108,7 @@ public class Archer extends EntitySkeleton implements TownyMob {
 	    this.goalSelector.a(3, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
 	    this.goalSelector.a(3, new PathfinderGoalRandomLookaround(this));
 	    this.getBukkitEntity().setMetadata("CustomEntity", new FixedMetadataValue(TownyMobs.instance, true));
+	    this.getBukkitEntity().setMetadata("TownyMob", new FixedMetadataValue(TownyMobs.instance, true));
 	}
 	
 	@Override
@@ -516,7 +517,7 @@ public class Archer extends EntitySkeleton implements TownyMob {
 		if (this.getHealth() > 0) {
 			this.dead = false;
 		}
-		this.ao = false; //TODO: Update name on version change
+		this.ao = false; // prevent portalling TODO: Update name on version change
 		super.h();
 	}
 }

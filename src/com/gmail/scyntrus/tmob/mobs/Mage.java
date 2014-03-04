@@ -107,6 +107,7 @@ public class Mage extends EntityWitch implements TownyMob {
 	    this.goalSelector.a(3, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
 	    this.goalSelector.a(3, new PathfinderGoalRandomLookaround(this));
 	    this.getBukkitEntity().setMetadata("CustomEntity", new FixedMetadataValue(TownyMobs.instance, true));
+	    this.getBukkitEntity().setMetadata("TownyMob", new FixedMetadataValue(TownyMobs.instance, true));
 	}
 
 	@Override
