@@ -309,19 +309,20 @@ public class Titan extends EntityIronGolem implements TownyMob {
 	
 	@Override
 	public void updateMob() {
-		if (this.target instanceof EntityLiving && this.target.isAlive()) {
-			super.setGoalTarget((EntityLiving) this.target);
-		} else {
-			this.findTarget();
-		}
 		try {
 			this.setTown(TownyUniverse.getDataSource().getTown(this.townName));
 		} catch (NotRegisteredException e) {
 			this.forceDie();
+			return;
 		}
 		if (this.town == null) {
 			this.forceDie();
 			return;
+		}
+		if (this.target instanceof EntityLiving && this.target.isAlive()) {
+			super.setGoalTarget((EntityLiving) this.target);
+		} else {
+			this.findTarget();
 		}
 	}
 
