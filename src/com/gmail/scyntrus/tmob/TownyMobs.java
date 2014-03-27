@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 import net.milkbowl.vault.economy.Economy;
-import net.minecraft.server.v1_7_R1.Entity;
-import net.minecraft.server.v1_7_R1.EntityTypes;
+import net.minecraft.server.v1_7_R2.Entity;
+import net.minecraft.server.v1_7_R2.EntityTypes;
 import net.minecraft.util.org.apache.commons.io.IOUtils;
 
 import org.bukkit.Location;
@@ -109,9 +109,9 @@ public class TownyMobs extends JavaPlugin {
 		}
 		
     	try {
-    	    Class.forName("org.bukkit.craftbukkit.v1_7_R1.entity.CraftEntity");
+    	    Class.forName("org.bukkit.craftbukkit.v1_7_R2.entity.CraftEntity");
     	} catch(Exception e) {
-    	    System.out.println("[TownyMobs] You are running an unsupported version of CraftBukkit (requires v1_7_R1). TownyMobs will not be enabled.");
+    	    System.out.println("[TownyMobs] You are running an unsupported version of CraftBukkit (requires v1_7_R2). TownyMobs will not be enabled.");
     	    this.getCommand("tm").setExecutor(new ErrorCommand(this));
     	    this.getCommand("tmc").setExecutor(new ErrorCommand(this));
     	    return;
