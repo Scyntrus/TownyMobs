@@ -3,17 +3,17 @@ package com.gmail.scyntrus.tmob;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.server.v1_7_R2.Entity;
-import net.minecraft.server.v1_7_R2.EntityInsentient;
-import net.minecraft.server.v1_7_R2.EntityWolf;
+import net.minecraft.server.v1_7_R3.Entity;
+import net.minecraft.server.v1_7_R3.EntityInsentient;
+import net.minecraft.server.v1_7_R3.EntityWolf;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_7_R2.entity.CraftCreature;
-import org.bukkit.craftbukkit.v1_7_R2.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_7_R2.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R3.entity.CraftCreature;
+import org.bukkit.craftbukkit.v1_7_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_7_R3.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -158,6 +158,7 @@ public class EntityListener implements Listener {
         }, 1L);
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority=EventPriority.HIGH, ignoreCancelled=true)
 	public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
 		if (!(e.getEntity() instanceof CraftLivingEntity)) return;
@@ -248,6 +249,7 @@ public class EntityListener implements Listener {
 			}
 		}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent e) {
 		EntityDamageEvent lastDamage = e.getEntity().getLastDamageCause();
@@ -305,6 +307,7 @@ public class EntityListener implements Listener {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler(ignoreCancelled = true)
 	public void onPotionSplash(PotionSplashEvent e) {
 		if (e.getPotion().getShooter() == null) return;
