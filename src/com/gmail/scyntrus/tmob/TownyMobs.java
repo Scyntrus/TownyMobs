@@ -4,10 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,8 +13,6 @@ import java.util.Map;
 
 import net.milkbowl.vault.economy.Economy;
 import net.minecraft.server.v1_7_R3.Entity;
-import net.minecraft.server.v1_7_R3.EntityTypes;
-import net.minecraft.util.org.apache.commons.io.IOUtils;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -87,35 +83,35 @@ public class TownyMobs extends JavaPlugin {
 	private Map mapG;
 	
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked" })
 	public void onEnable() {
 		TownyMobs.instance = this;
 		this.saveDefaultConfig();
 		FileConfiguration config = this.getConfig();
 		config.options().copyDefaults(true);
     	this.saveConfig();
-
 		
 		try {
-			File defaultConfig = new File(this.getDataFolder(), "configDefaults.yml");
-			defaultConfig.createNewFile();
-			InputStream is = getClass().getResourceAsStream("/config.yml");
-			FileOutputStream os = new FileOutputStream(defaultConfig);
-			IOUtils.copy(is, os);
-			is.close();
-			os.close();
+			Class.forName("org.bukkit.craftbukkit.v1_7_R3.entity.CraftEntity");
 		} catch (Exception e) {
-    	    System.out.println("[TownyMobs] Could not create default config file.");
+			try {
+				if (Class.forName("za.co.mcportcentral.entity.CraftCustomEntity")
+						.getResourceAsStream("/mappings/v1_7_R1/cb2numpkg.srg") != null) {
+					System.out.println("[TownyMobs] MCPC detected. MCPC compatibility is experimental.");
+				} else {
+					throw e;
+				}
+			} catch (Exception e1) {
+				System.out.println("[TownyMobs] You are running an unsupported version of CraftBukkit (requires v1_7_R3). TownyMobs will not be enabled.");
+				getServer().getConsoleSender().sendMessage("§cTownyMobs is incompatible with this version of CraftBukkit, please download a newer version.");
+				this.getCommand("fm").setExecutor(new ErrorCommand(this));
+				this.getCommand("fmc").setExecutor(new ErrorCommand(this));
+				e.printStackTrace();
+				return;
+			}
 		}
 		
-    	try {
-    	    Class.forName("org.bukkit.craftbukkit.v1_7_R3.entity.CraftEntity");
-    	} catch(Exception e) {
-    	    System.out.println("[TownyMobs] You are running an unsupported version of CraftBukkit (requires v1_7_R3). TownyMobs will not be enabled.");
-    	    this.getCommand("tm").setExecutor(new ErrorCommand(this));
-    	    this.getCommand("tmc").setExecutor(new ErrorCommand(this));
-    	    return;
-    	}
+		Utils.copyDefaultConfig();
     	
 		int modelNum = 51;
 		switch (config.getInt("model")) {
@@ -194,32 +190,25 @@ public class TownyMobs extends JavaPlugin {
 		Titan.drops = config.getInt("Titan.drops", 0);
 		
 		this.pm = this.getServer().getPluginManager();
+		if (!ReflectionManager.init()) {
+        	this.getLogger().severe("[Fatal Error] Unable to register mobs");
+    	    this.getCommand("tm").setExecutor(new ErrorCommand(this));
+    	    this.getCommand("tmc").setExecutor(new ErrorCommand(this));
+			return;
+		}
 	    try {
-	    	Field fieldC = EntityTypes.class.getDeclaredField("c");
-	        fieldC.setAccessible(true);
-	    	Field fieldD = EntityTypes.class.getDeclaredField("d");
-	        fieldD.setAccessible(true);
-	    	Field fieldF = EntityTypes.class.getDeclaredField("f");
-	        fieldF.setAccessible(true);
-	    	Field fieldG = EntityTypes.class.getDeclaredField("g");
-	        fieldG.setAccessible(true);
-	        
-	        mapC = (Map) fieldC.get(null);
-	        mapD = (Map) fieldD.get(null);
-	        mapF = (Map) fieldF.get(null);
-	        mapG = (Map) fieldG.get(null);
-	    	
 	    	addEntityType(Archer.class, Archer.typeName, modelNum);
 	    	addEntityType(Swordsman.class, Swordsman.typeName, modelNum);
 	    	addEntityType(Mage.class, Mage.typeName, modelNum);
 	    	addEntityType(Titan.class, Titan.typeName, 99);
-	    	
 	    } catch (Exception e) {
         	this.getLogger().severe("[Fatal Error] Unable to register mobs");
-	    	e.printStackTrace();
-	    	pm.disablePlugin(this);
+    	    this.getCommand("tm").setExecutor(new ErrorCommand(this));
+    	    this.getCommand("tmc").setExecutor(new ErrorCommand(this));
+    	    e.printStackTrace();
 	    	return;
 	    }
+	    
 	    this.getCommand("tm").setExecutor(new TmCommand(this));
 	    if (config.getBoolean("tmcEnabled", false)) {
 		    this.getCommand("tmc").setExecutor(new TmcCommand(this));

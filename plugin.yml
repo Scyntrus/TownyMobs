@@ -1,7 +1,7 @@
 name: TownyMobs
 main: com.gmail.scyntrus.tmob.TownyMobs
 author: Scyntrus
-version: 2.7.4_v1_7_R3
+version: 2.7.5_v1_7_R3
 depend: [Towny]
 softdepend: [Vault]
 commands:
@@ -38,7 +38,7 @@ permissions:
         description: Allows you to use /tm order moveToPoint
         default: true
     tmob.order.tp:
-        description: Allows you to use /tm order [tpSpawn|tpHere]
+        description: Allows you to use /tm order [tpHome|tpHere]
         default: op
     tmob.bypass:
         description: Allows you to spawn mobs without restriction

@@ -1,7 +1,5 @@
 package com.gmail.scyntrus.tmob.mobs;
 
-import java.lang.reflect.Field;
-
 import net.minecraft.server.v1_7_R3.AttributeInstance;
 import net.minecraft.server.v1_7_R3.DamageSource;
 import net.minecraft.server.v1_7_R3.Entity;
@@ -14,7 +12,6 @@ import net.minecraft.server.v1_7_R3.EnumMonsterType;
 import net.minecraft.server.v1_7_R3.GenericAttributes;
 import net.minecraft.server.v1_7_R3.MathHelper;
 import net.minecraft.server.v1_7_R3.NBTTagCompound;
-import net.minecraft.server.v1_7_R3.Navigation;
 import net.minecraft.server.v1_7_R3.PathfinderGoal;
 import net.minecraft.server.v1_7_R3.PathfinderGoalFloat;
 import net.minecraft.server.v1_7_R3.PathfinderGoalLookAtPlayer;
@@ -22,7 +19,6 @@ import net.minecraft.server.v1_7_R3.PathfinderGoalMeleeAttack;
 import net.minecraft.server.v1_7_R3.PathfinderGoalMoveTowardsTarget;
 import net.minecraft.server.v1_7_R3.PathfinderGoalRandomLookaround;
 import net.minecraft.server.v1_7_R3.PathfinderGoalRandomStroll;
-import net.minecraft.server.v1_7_R3.PathfinderGoalSelector;
 import net.minecraft.server.v1_7_R3.World;
 
 import org.bukkit.ChatColor;
@@ -33,6 +29,7 @@ import org.bukkit.craftbukkit.v1_7_R3.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_7_R3.util.UnsafeList;
 import org.bukkit.metadata.FixedMetadataValue;
 
+import com.gmail.scyntrus.tmob.ReflectionManager;
 import com.gmail.scyntrus.tmob.TownyMob;
 import com.gmail.scyntrus.tmob.TownyMobs;
 import com.gmail.scyntrus.tmob.Utils;
@@ -82,22 +79,22 @@ public class Titan extends EntityIronGolem implements TownyMob {
 	    this.getNavigation().c(true);
 	    this.getNavigation().d(false);
 	    this.getNavigation().e(true);
-	    this.setHealth(maxHp);
-	    try {
-			Field field = Navigation.class.getDeclaredField("e");
-			field.setAccessible(true);
-			AttributeInstance e = (AttributeInstance) field.get(this.getNavigation());
-			e.setValue(TownyMobs.mobNavRange);
-		} catch (Exception e) {
-		}
-	    try {
-	    	 
-	    	Field gsa = PathfinderGoalSelector.class.getDeclaredField("a");
-	    	gsa.setAccessible(true);
-	    	gsa.set(this.goalSelector, new UnsafeList<PathfinderGoal>());
-	    	gsa.set(this.targetSelector, new UnsafeList<PathfinderGoal>());
-	    } catch (Exception e) {
+	    
+	    if (ReflectionManager.goodNavigationE) {
+		    try {
+				AttributeInstance e = (AttributeInstance) ReflectionManager.navigationE.get(this.getNavigation());
+				e.setValue(TownyMobs.mobNavRange);
+			} catch (Exception e) {
+			}
 	    }
+	    if (ReflectionManager.goodPathfinderGoalSelectorB) {
+		    try {
+		    	ReflectionManager.pathfinderGoalSelectorB.set(this.goalSelector, new UnsafeList<PathfinderGoal>());
+		    	ReflectionManager.pathfinderGoalSelectorB.set(this.targetSelector, new UnsafeList<PathfinderGoal>());
+		    } catch (Exception e) {
+			}
+	    }
+	    
 	    this.goalSelector.a(1, new PathfinderGoalFloat(this));
 	    this.goalSelector.a(2, new PathfinderGoalMeleeAttack(this, 1.0, true));
 	    this.goalSelector.a(3, new PathfinderGoalMoveTowardsTarget(this, 1.0, (float) range));
