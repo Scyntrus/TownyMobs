@@ -71,17 +71,7 @@ public class TownyMobs extends JavaPlugin {
 	public static int chunkMobLoadTask = -1;
 	
 	public static boolean feedEnabled = true;
-	public static float feedAmount = 5;
-	
-	@SuppressWarnings("rawtypes")
-	private Map mapC;
-	@SuppressWarnings("rawtypes")
-	private Map mapD;
-	@SuppressWarnings("rawtypes")
-	private Map mapF;
-	@SuppressWarnings("rawtypes")
-	private Map mapG;
-	
+	public static float feedAmount = 5;	
 	
 	@SuppressWarnings({ "unchecked" })
 	public void onEnable() {
@@ -268,10 +258,10 @@ public class TownyMobs extends JavaPlugin {
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void addEntityType(Class paramClass, String paramString, int paramInt) {
-	    mapC.put(paramString, paramClass);
-	    mapD.put(paramClass, paramString);
-	    mapF.put(paramClass, Integer.valueOf(paramInt));
-	    mapG.put(paramString, Integer.valueOf(paramInt));
+	    ReflectionManager.mapC.put(paramString, paramClass);
+	    ReflectionManager.mapD.put(paramClass, paramString);
+	    ReflectionManager.mapF.put(paramClass, Integer.valueOf(paramInt));
+	    ReflectionManager.mapG.put(paramString, Integer.valueOf(paramInt));
 	}
 	
 	public void onDisable() {
@@ -392,7 +382,7 @@ public class TownyMobs extends JavaPlugin {
 				}
 				
 				if (!newMob.getEntity().world.addEntity((Entity) newMob, SpawnReason.CUSTOM)) {
-					System.out.println("Unable to respawn a Towny Mob.");
+					System.out.println(String.format("Unable to respawn a Towny Mob: %s %s .", mobData.get(2), mobData.get(0)));
 					if (!backup) {
 						backup = true;
 						try {
@@ -402,6 +392,7 @@ public class TownyMobs extends JavaPlugin {
 							System.out.println("Failed to save backup file");
 						}
 					}
+					continue;
 				}
 				mobList.add(newMob);
 				newMob.getEntity().dead = false;
