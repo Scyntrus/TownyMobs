@@ -1,7 +1,7 @@
 name: TownyMobs
 main: com.gmail.scyntrus.tmob.TownyMobs
 author: Scyntrus
-version: 2.7.5_v1_7_R3
+version: 2.7.5_v1_7_R4
 depend: [Towny]
 softdepend: [Vault]
 commands:

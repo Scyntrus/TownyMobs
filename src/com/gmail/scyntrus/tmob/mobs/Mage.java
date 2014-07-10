@@ -1,36 +1,36 @@
 package com.gmail.scyntrus.tmob.mobs;
 
-import net.minecraft.server.v1_7_R3.AttributeInstance;
-import net.minecraft.server.v1_7_R3.Block;
-import net.minecraft.server.v1_7_R3.DamageSource;
-import net.minecraft.server.v1_7_R3.Entity;
-import net.minecraft.server.v1_7_R3.EntityHuman;
-import net.minecraft.server.v1_7_R3.EntityLiving;
-import net.minecraft.server.v1_7_R3.EntityPlayer;
-import net.minecraft.server.v1_7_R3.EntityPotion;
-import net.minecraft.server.v1_7_R3.EntityProjectile;
-import net.minecraft.server.v1_7_R3.EntityWitch;
-import net.minecraft.server.v1_7_R3.EnumMonsterType;
-import net.minecraft.server.v1_7_R3.GenericAttributes;
-import net.minecraft.server.v1_7_R3.Item;
-import net.minecraft.server.v1_7_R3.ItemStack;
-import net.minecraft.server.v1_7_R3.MathHelper;
-import net.minecraft.server.v1_7_R3.MobEffectList;
-import net.minecraft.server.v1_7_R3.NBTTagCompound;
-import net.minecraft.server.v1_7_R3.PathfinderGoal;
-import net.minecraft.server.v1_7_R3.PathfinderGoalArrowAttack;
-import net.minecraft.server.v1_7_R3.PathfinderGoalFloat;
-import net.minecraft.server.v1_7_R3.PathfinderGoalLookAtPlayer;
-import net.minecraft.server.v1_7_R3.PathfinderGoalRandomLookaround;
-import net.minecraft.server.v1_7_R3.PathfinderGoalRandomStroll;
-import net.minecraft.server.v1_7_R3.World;
+import net.minecraft.server.v1_7_R4.AttributeInstance;
+import net.minecraft.server.v1_7_R4.Block;
+import net.minecraft.server.v1_7_R4.DamageSource;
+import net.minecraft.server.v1_7_R4.Entity;
+import net.minecraft.server.v1_7_R4.EntityHuman;
+import net.minecraft.server.v1_7_R4.EntityLiving;
+import net.minecraft.server.v1_7_R4.EntityPlayer;
+import net.minecraft.server.v1_7_R4.EntityPotion;
+import net.minecraft.server.v1_7_R4.EntityProjectile;
+import net.minecraft.server.v1_7_R4.EntityWitch;
+import net.minecraft.server.v1_7_R4.EnumMonsterType;
+import net.minecraft.server.v1_7_R4.GenericAttributes;
+import net.minecraft.server.v1_7_R4.Item;
+import net.minecraft.server.v1_7_R4.ItemStack;
+import net.minecraft.server.v1_7_R4.MathHelper;
+import net.minecraft.server.v1_7_R4.MobEffectList;
+import net.minecraft.server.v1_7_R4.NBTTagCompound;
+import net.minecraft.server.v1_7_R4.PathfinderGoal;
+import net.minecraft.server.v1_7_R4.PathfinderGoalArrowAttack;
+import net.minecraft.server.v1_7_R4.PathfinderGoalFloat;
+import net.minecraft.server.v1_7_R4.PathfinderGoalLookAtPlayer;
+import net.minecraft.server.v1_7_R4.PathfinderGoalRandomLookaround;
+import net.minecraft.server.v1_7_R4.PathfinderGoalRandomStroll;
+import net.minecraft.server.v1_7_R4.World;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_7_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R3.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_7_R3.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_7_R3.util.UnsafeList;
+import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_7_R4.util.UnsafeList;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import com.gmail.scyntrus.tmob.ReflectionManager;
@@ -75,7 +75,7 @@ public class Mage extends EntityWitch implements TownyMob {
 	    this.canPickUpLoot = false;
 	    this.moveSpeed = TownyMobs.mobSpeed;
 	    getAttributeInstance(GenericAttributes.d).setValue(this.moveSpeed);
-	    getAttributeInstance(GenericAttributes.a).setValue(maxHp);
+	    getAttributeInstance(GenericAttributes.maxHealth).setValue(maxHp);
 	    this.setHealth(maxHp);
 	    this.W = 1.5F;
 	    this.getNavigation().a(false);
@@ -83,7 +83,7 @@ public class Mage extends EntityWitch implements TownyMob {
 	    this.getNavigation().c(true);
 	    this.getNavigation().d(false);
 	    this.getNavigation().e(true);
-		this.setEquipment(0, new ItemStack((Item)Item.REGISTRY.a("potion"), 1, 8204));
+		this.setEquipment(0, new ItemStack((Item)Item.REGISTRY.get("potion"), 1, 8204));
 	    
 	    if (ReflectionManager.goodNavigationE) {
 		    try {
@@ -356,12 +356,12 @@ public class Mage extends EntityWitch implements TownyMob {
 	}
 
 	@Override
-	protected String aS() {
+	protected String aT() {
 	    return TownyMobs.sndHurt;
 	}
 
 	@Override
-	protected String aT() {
+	protected String aU() {
 	    return TownyMobs.sndDeath;
 	}
 

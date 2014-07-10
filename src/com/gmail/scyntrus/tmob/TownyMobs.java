@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.milkbowl.vault.economy.Economy;
-import net.minecraft.server.v1_7_R3.Entity;
+import net.minecraft.server.v1_7_R4.Entity;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -92,7 +92,7 @@ public class TownyMobs extends JavaPlugin {
     	this.saveConfig();
 		
 		try {
-			Class.forName("org.bukkit.craftbukkit.v1_7_R3.entity.CraftEntity");
+			Class.forName("org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity");
 		} catch (Exception e) {
 			try {
 				if (Class.forName("za.co.mcportcentral.entity.CraftCustomEntity")
@@ -102,7 +102,7 @@ public class TownyMobs extends JavaPlugin {
 					throw e;
 				}
 			} catch (Exception e1) {
-				System.out.println("[TownyMobs] You are running an unsupported version of CraftBukkit (requires v1_7_R3). TownyMobs will not be enabled.");
+				System.out.println("[TownyMobs] You are running an unsupported version of CraftBukkit (requires v1_7_R4). TownyMobs will not be enabled.");
 				getServer().getConsoleSender().sendMessage("§cTownyMobs is incompatible with this version of CraftBukkit, please download a newer version.");
 				this.getCommand("fm").setExecutor(new ErrorCommand(this));
 				this.getCommand("fmc").setExecutor(new ErrorCommand(this));
