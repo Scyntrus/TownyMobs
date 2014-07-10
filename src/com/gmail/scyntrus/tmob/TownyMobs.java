@@ -85,9 +85,13 @@ public class TownyMobs extends JavaPlugin {
 			Class.forName("org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity");
 		} catch (Exception e) {
 			try {
-				if (Class.forName("za.co.mcportcentral.entity.CraftCustomEntity")
-						.getResourceAsStream("/mappings/v1_7_R1/cb2numpkg.srg") != null) {
-					System.out.println("[TownyMobs] MCPC detected. MCPC compatibility is experimental.");
+			    Class<?> tmpMcpcClass = Class.forName("za.co.mcportcentral.entity.CraftCustomEntity");
+				if (tmpMcpcClass != null) {
+				    if (tmpMcpcClass.getResourceAsStream("/mappings/v1_7_R4/cb2numpkg.srg") != null) {
+				        System.out.println("[TownyMobs] MCPC detected. MCPC compatibility is experimental.");
+				    } else {
+                        System.out.println("[TownyMobs] WARNING: INCOMPATIBLE VERSION OF MCPC DETECTED, TownyMobs will probably not work.");
+				    }
 				} else {
 					throw e;
 				}
