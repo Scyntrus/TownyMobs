@@ -7,6 +7,7 @@ import net.minecraft.server.v1_7_R3.Entity;
 import net.minecraft.server.v1_7_R3.EntityHuman;
 import net.minecraft.server.v1_7_R3.EntityLiving;
 import net.minecraft.server.v1_7_R3.EntityPlayer;
+import net.minecraft.server.v1_7_R3.EntityPotion;
 import net.minecraft.server.v1_7_R3.EntityProjectile;
 import net.minecraft.server.v1_7_R3.EntityWitch;
 import net.minecraft.server.v1_7_R3.EnumMonsterType;
@@ -14,6 +15,7 @@ import net.minecraft.server.v1_7_R3.GenericAttributes;
 import net.minecraft.server.v1_7_R3.Item;
 import net.minecraft.server.v1_7_R3.ItemStack;
 import net.minecraft.server.v1_7_R3.MathHelper;
+import net.minecraft.server.v1_7_R3.MobEffectList;
 import net.minecraft.server.v1_7_R3.NBTTagCompound;
 import net.minecraft.server.v1_7_R3.PathfinderGoal;
 import net.minecraft.server.v1_7_R3.PathfinderGoalArrowAttack;
@@ -511,4 +513,33 @@ public class Mage extends EntityWitch implements TownyMob {
 		this.an = false;
 		super.h();
 	}
+
+    public void a(EntityLiving paramEntityLiving, float paramFloat) {
+        if (bZ())
+            return;
+
+        EntityPotion localEntityPotion = new EntityPotion(this.world, this, 32732);
+        localEntityPotion.pitch -= -20.0F;
+        double d1 = paramEntityLiving.locX + paramEntityLiving.motX - this.locX;
+        double d2 = paramEntityLiving.locY + paramEntityLiving.getHeadHeight() - 1.100000023841858D - this.locY;
+        double d3 = paramEntityLiving.locZ + paramEntityLiving.motZ - this.locZ;
+        float f = MathHelper.sqrt(d1 * d1 + d3 * d3);
+
+        if ((f >= 8.0F) && (!paramEntityLiving.hasEffect(MobEffectList.SLOWER_MOVEMENT)))
+            localEntityPotion.setPotionValue(32698);
+        else if ((paramEntityLiving.getHealth() >= 8.0F) && (!paramEntityLiving.hasEffect(MobEffectList.POISON)) 
+                && (paramEntityLiving.getMonsterType() != EnumMonsterType.UNDEAD)
+                && (paramEntityLiving.getMonsterType() != EnumMonsterType.ARTHROPOD))
+            localEntityPotion.setPotionValue(32660);
+        else if ((f <= 3.0F) && (!paramEntityLiving.hasEffect(MobEffectList.WEAKNESS)) && (this.random.nextFloat() < 0.25F)) {
+            localEntityPotion.setPotionValue(32696);
+        }
+        else if (paramEntityLiving.getMonsterType() == EnumMonsterType.UNDEAD) {
+            localEntityPotion.setPotionValue(32696);
+        }
+
+        localEntityPotion.shoot(d1, d2 + f * 0.2F, d3, 0.75F, 8.0F);
+
+        this.world.addEntity(localEntityPotion);
+    }
 }
