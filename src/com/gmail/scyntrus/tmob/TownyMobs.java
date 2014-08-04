@@ -127,7 +127,7 @@ public class TownyMobs extends JavaPlugin {
 			modelNum = 57;
 			//TownyMobs.sndBreath = "mob.zombiepig.zpig";
 			TownyMobs.sndHurt = "mob.zombiepig.zpighurt";
-			TownyMobs.sndDeath = "mmob.zombiepig.zpigdeath";
+			TownyMobs.sndDeath = "mob.zombiepig.zpigdeath";
 			TownyMobs.sndStep = "mob.zombie.step";
 			break;
 		}
