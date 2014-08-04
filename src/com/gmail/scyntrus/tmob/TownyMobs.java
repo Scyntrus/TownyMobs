@@ -41,11 +41,11 @@ public class TownyMobs extends JavaPlugin {
 	public Map<String,List<TownyMob>> playerSelections = new HashMap<String,List<TownyMob>>();
 	
 	public static long mobCount = 0;
-	
-	public static String sndBreath = "";
-	public static String sndHurt = "";
-	public static String sndDeath = "";
-	public static String sndStep = "";
+
+    public static String sndBreath = null;
+    public static String sndHurt = null;
+    public static String sndDeath = null;
+    public static String sndStep = null;
 	
 	public static int spawnLimit = 50;
 	public static int mobsPerTown = 0;
