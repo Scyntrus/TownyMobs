@@ -385,19 +385,7 @@ public class TownyMobs extends JavaPlugin {
 					newMob.setOrder("poi");
 				}
 				
-				if (!newMob.getEntity().world.addEntity((Entity) newMob, SpawnReason.CUSTOM)) {
-					System.out.println(String.format("Unable to respawn a Towny Mob: %s %s .", mobData.get(2), mobData.get(0)));
-					if (!backup) {
-						backup = true;
-						try {
-							conf.save(new File(getDataFolder(), "data_backup.dat"));
-							System.out.println("Backup file saved as data_backup.dat");
-						} catch (IOException e) {
-							System.out.println("Failed to save backup file");
-						}
-					}
-					continue;
-				}
+				newMob.getEntity().world.addEntity((Entity) newMob, SpawnReason.CUSTOM);
 				mobList.add(newMob);
 				newMob.getEntity().dead = false;
 			}
